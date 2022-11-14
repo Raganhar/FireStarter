@@ -51,7 +51,14 @@ public class Logic
 
     private void SetToRootFolder()
     {
-        Directory.SetCurrentDirectory(_options.Directory);
+        if (string.IsNullOrWhiteSpace(_options.Directory))
+        {
+            _options.Directory = Directory.GetCurrentDirectory();
+        }
+        else
+        {
+            Directory.SetCurrentDirectory(_options.Directory);
+        }
     }
 
     private static void PushStuffToGit()
