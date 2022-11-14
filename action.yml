@@ -1,0 +1,66 @@
+name: '.NET code metric analyzer'
+description: 'A Github action that maintains a CODE_METRICS.md file, reporting cyclomatic complexity, maintainability index, etc.'
+branding:
+  icon: sliders
+  color: purple
+#inputs:
+#  main-jira-transition:
+#    description: 'Transition to be used when merging PRs into main'
+#    required: true
+#  jira_state_when_revert:
+#    description: 'Transition to be used when reverting tickets'
+#    required: true
+#  release-jira-transition:
+#    description: 'Transition to be used when merging PRs into release'
+#    required: false
+#  branch_to_compare_to:
+#    description: 'Branch name which pushes will be compared to'
+#    required: false
+#  from:
+#    description: 'Where to search for jira tickets'
+#    required: false
+#  jira-url:
+#    description: 'Sample text to search'
+#    required: true
+#  jira-user:
+#    description: 'Sample text to search'
+#    required: true
+#  jira-api-key:
+#    description: 'Sample text to search'
+#    required: true
+#  text:
+#    description: 'Sample text to search'
+#    required: false
+#  ignore_tickets_in_following_states:
+#    description: 'Sample text to search'
+#    required: false
+outputs:
+  summary-title:
+    description: 'The title of the code metrics action.'
+  summary-details:
+    description: 'A detailed summary of all the projects that were flagged.'
+  updated-metrics:
+    description: 'A boolean value, indicating whether or not the CODE_METRICS.md was updated as a result of running this action.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+#  args:
+#  - ${{ inputs.from }}
+#  - '-t'
+#  - ${{ inputs.text }}
+#  - '--jira-url'
+#  - ${{ inputs.jira-url }}
+#  - '--jira-user'
+#  - ${{ inputs.jira-user }}
+#  - '--jira-api-key'
+#  - ${{ inputs.jira-api-key }}
+#  - '--main-jira-transition'
+#  - ${{ inputs.main-jira-transition }}
+#  - '--release-jira-transition'
+#  - ${{ inputs.release-jira-transition }}
+#  - '--branch_to_compare_to'
+#  - ${{ inputs.branch_to_compare_to }}
+#  - '--jira_state_when_revert'
+#  - ${{ inputs.jira_state_when_revert }}
+#  - '--ignore_tickets_in_following_states'
+#  - ${{ inputs.ignore_tickets_in_following_states }}
