@@ -12,6 +12,7 @@ static TService Get<TService>(IHost host)
 
 var logger = Get<ILoggerFactory>(host)
     .CreateLogger("DotNet.GitHubAction.Program");
+
 var parser = Default.ParseArguments<ActionInputs>(() => new(), args);
 parser.WithNotParsed(
     errors =>
@@ -25,9 +26,6 @@ parser.WithNotParsed(
 var done = false;
 await parser.WithParsedAsync(async options =>
 {
-    // var environmentVariable = Environment.GetEnvironmentVariable("GITHUB_CONTEXT");
-    // var context = JsonConvert.DeserializeObject<GithubActionContext_pullrequest>(environmentVariable);
-
     logger.LogInformation($"Options: {JsonConvert.SerializeObject(options,Formatting.Indented)}");
     await new Logic(logger, options).DoDaThing();
     done = true;

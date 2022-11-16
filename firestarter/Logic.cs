@@ -35,7 +35,7 @@ public class Logic
         //infra
         //projects
         SetToRootFolder();
-        PrintEverything();
+        // PrintEverything();
         PushStuffToGit();
     }
 
