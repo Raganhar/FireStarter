@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.Name}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: transition jira tickets
-        uses: Raganhar/nup-github-action-jira-transition@v2
+        uses: AUTOProff/ap-github-action-jira-transition@v1
         env:
           GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
         with:

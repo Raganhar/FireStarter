@@ -99,15 +99,11 @@ public class Logic
 
         var projectNames = solutionDescription.Projects.Select(x => x.Name).ToList();
 
-        switch (solutionDescription.Tech)
+        switch (solutionDescription.LegacySystem)
         {
-            case TechStack.dotnet:StandardGithubFlows(solutionDescription.Projects);
+            case SupportedLegacySystems.apfe:Apfe(projectNames);
                 break;
-            case TechStack.php:
-                break;
-            case TechStack.js:
-                break;
-            case TechStack.legacy_APFE:Apfe(projectNames);
+            case null: StandardGithubFlows(solutionDescription.Projects);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -146,7 +142,10 @@ public class Logic
 
     private static void StandardGithubFlows(List<Project> projects)
     {
-        var filename = $"{nameof(promote_dev)}.yml".ToFileName();
+        var filename = $"{nameof(verify)}.yml".ToFileName();
+        File.WriteAllText(filename, verify.content(projects));
+        
+        filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
         filename = $"{nameof(promote_release)}.yml".ToFileName();

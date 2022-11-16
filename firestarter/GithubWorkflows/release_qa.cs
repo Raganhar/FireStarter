@@ -14,7 +14,7 @@ on:
     branches:
       - ""release""
 jobs:
-  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x.Name}:
+  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:

@@ -9,16 +9,16 @@ public class FireStarterTest
 {
     private SolutionDescription _solutionDescription = new SolutionDescription
     {
-        Tech = TechStack.dotnet, Version = DescriptionVersion.v1,
+        Version = DescriptionVersion.v1,
         Projects = new List<Project>
         {
             new Project
             {
-                Name = "SomeAPi"
+                Name = "SomeAPi",Tech = TechStack.dotnet,
             },
             new Project
             {
-                Name = "SomeBackgroundWorker"
+                Name = "SomeBackgroundWorker",Tech = TechStack.dotnet,
             }
         }
     };

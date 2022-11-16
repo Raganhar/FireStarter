@@ -4,11 +4,11 @@ namespace firestarter;
 
 public class SolutionDescription
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public TechStack Tech { get; set; }
     public List<Project> Projects { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public DescriptionVersion Version { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public SupportedLegacySystems? LegacySystem { get; set; }
 }
 
 public enum DescriptionVersion
@@ -21,8 +21,10 @@ public class Project
     public string Name { get; set; }
     public string DockerFile => LegacyProperties?.DockerFile ?? "Dockerfile";
     public string ServiceName => LegacyProperties?.ServiceName ?? $"{Name}-service";
+    public string TestFilter => LegacyProperties?.TestFilter ?? $"";
     public DeprecatedProperties LegacyProperties { get; set; }
-    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public TechStack Tech { get; set; }
 }
 
 public class DeprecatedProperties
@@ -30,6 +32,7 @@ public class DeprecatedProperties
     public string ContainerName { get; set; }
     public string DockerFile { get; set; } = "Dockerfile";
     public string ServiceName { get; set; }
+    public string TestFilter { get; set; }
 }
 
 public enum TechStack
@@ -37,5 +40,11 @@ public enum TechStack
     dotnet,
     php,
     js,
-    legacy_APFE
+    legacy_APFE,
+    legacy_dotnet
+}
+
+public enum SupportedLegacySystems
+{
+    apfe
 }
