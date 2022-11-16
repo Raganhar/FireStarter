@@ -20,7 +20,7 @@ public class Project
 {
     public string Name { get; set; }
     public string ContainerName { get; set; }
-    public string DockerFile { get; set; } = "DockerFile";
+    public string DockerFile { get; set; } = "Dockerfile";
 }
 
 public enum TechStack

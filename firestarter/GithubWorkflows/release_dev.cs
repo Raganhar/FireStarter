@@ -17,8 +17,8 @@ jobs:
       prefix: dev
       cluster: autoproff-cluster
       service_name: {x.Name}-service
-      dockerfile: ""{x.Name}-dockerfile""
-      {(string.IsNullOrWhiteSpace(x.ContainerName) ? "container_name: stage-{x.ContainerName}" : "")}"
+      dockerfile: ""{x.DockerFile}""
+      {(!string.IsNullOrWhiteSpace(x.ContainerName) ? $"container_name: dev-{x.ContainerName}" : "")}"
     )))}
 ";
 }

@@ -146,8 +146,6 @@ public class Logic
 
     private static void StandardGithubFlows(List<Project> projects)
     {
-        var projectNames = projects.Select(x=>x.Name).ToList();
-
         var filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
@@ -159,9 +157,6 @@ public class Logic
 
         filename = $"{nameof(release_dev)}.yml".ToFileName();
         File.WriteAllText(filename, release_dev.content(projects));
-        //
-        // filename = $"{nameof(release_predev)}.yml".ToFileName();
-        // File.WriteAllText(filename, release_predev.content(projectNames));
 
         filename = $"{nameof(release_preprod)}.yml".ToFileName();
         File.WriteAllText(filename, release_preprod.content(projects));
