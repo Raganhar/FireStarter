@@ -2,7 +2,7 @@
 
 public static class release_preprod
 {
-    public static string content(List<Project> projects) => $@"name: Release preprod [preprod]    
+    public static string content(List<Project> projects) => $@"name: Release preprod [DEV03]    
 
 on:
   push:
@@ -33,12 +33,13 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
-      environment: preprod
-      prefix: preprod
+      environment: dev03
+      prefix: dev03
       cluster: autoproff-cluster
-      service_name: {x.Name}-service
+      service_name: {x.ServiceName}
       dockerfile: ""{x.DockerFile}""
-      {(!string.IsNullOrWhiteSpace(x.ContainerName) ? $"container_name: preprod-{x.ContainerName}" : "")}"
+      branch_name: main
+      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: preprod-{x.LegacyProperties.ContainerName}" : "")}"
     )))}
 ";
 }

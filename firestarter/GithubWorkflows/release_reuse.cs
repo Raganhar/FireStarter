@@ -39,6 +39,9 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
+    branch_name:
+        required: true
+        type: string
 
 jobs:    
   deploy:

@@ -15,9 +15,10 @@ jobs:
       environment: prod02
       prefix: prod
       cluster: autoproff-cluster
-      service_name: {x.Name}-service
+      service_name: {x.ServiceName}
       dockerfile: ""{x.DockerFile}""
-      {(!string.IsNullOrWhiteSpace(x.ContainerName) ? $"container_name: prod-{x.ContainerName}" : "")}"
+      branch_name: main
+      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: prod-{x.LegacyProperties?.ContainerName}" : "")}"
     )))}
 
   transition-jira-issues-on-trigger:

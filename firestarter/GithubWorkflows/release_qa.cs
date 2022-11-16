@@ -14,24 +14,17 @@ on:
     branches:
       - ""release""
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          ref: release
-  
-  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x}:
+  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x.Name}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
       environment: stage02
       prefix: stage
       cluster: autoproff-cluster
-      service_name: {x.Name}-service
+      service_name: {x.ServiceName}
       dockerfile: ""{x.DockerFile}""
-      {(!string.IsNullOrWhiteSpace(x.ContainerName) ? $"container_name: stage-{x.ContainerName}" : "")}"
+      branch_name: release
+      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: stage-{x.LegacyProperties.ContainerName}" : "")}"
       ))
   }
 ";

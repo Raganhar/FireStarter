@@ -16,9 +16,10 @@ jobs:
       environment: dev02
       prefix: dev
       cluster: autoproff-cluster
-      service_name: {x.Name}-service
+      service_name: {x.ServiceName}
       dockerfile: ""{x.DockerFile}""
-      {(!string.IsNullOrWhiteSpace(x.ContainerName) ? $"container_name: dev-{x.ContainerName}" : "")}"
+      branch_name: dev
+      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: dev-{x.LegacyProperties.ContainerName}" : "")}"
     )))}
 ";
 }
