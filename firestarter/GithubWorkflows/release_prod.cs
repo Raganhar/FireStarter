@@ -14,7 +14,7 @@ jobs:
     with:
       environment: prod02
       prefix: prod
-      cluster: {x}-cluster
+      cluster: autoproff-cluster
       service_name: {x}-service
       dockerfile: ""{x}-dockerfile""
       container_name: prod-{x}-container")))}

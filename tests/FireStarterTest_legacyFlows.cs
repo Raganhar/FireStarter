@@ -12,7 +12,8 @@ public class FireStarterTest_legacyFlows
     {
         var conf = new ActionInputs
         {
-            Directory = "C:\\Code\\ap-frontend",
+            Directory = "C:\\Code\\AuctionService",
+            // Directory = "C:\\Code\\ap-frontend",
         };
      
         await new Logic(NSubstitute.Substitute.For<ILogger>(), conf).DoDaThing();

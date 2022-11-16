@@ -28,7 +28,7 @@ jobs:
     with:
       environment: stage02
       prefix: stage
-      cluster: {x}-cluster
+      cluster: autoproff-cluster
       service_name: {x}-service
       dockerfile: ""{x}-dockerfile""
       container_name: stage-{x}-container")))}

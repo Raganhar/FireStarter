@@ -15,7 +15,7 @@ jobs:
     with:
       environment: dev02
       prefix: dev
-      cluster: {x}-cluster
+      cluster: autoproff-cluster
       service_name: {x}-service
       dockerfile: ""{x}-dockerfile""
       container_name: dev-{x}-container")))}

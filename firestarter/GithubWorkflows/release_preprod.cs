@@ -25,7 +25,7 @@ jobs:
           github.rest.git.createRef({{
             owner: context.repo.owner,
             repo: context.repo.repo,
-            ref: 'refs/tags/${{ steps.date.outputs.date }}',
+            ref: 'refs/tags/${{{{ steps.date.outputs.date }}}}',
             sha: context.sha
           }})
 
@@ -35,7 +35,7 @@ jobs:
     with:
       environment: preprod
       prefix: preprod
-      cluster: {x}-cluster
+      cluster: autoproff-cluster
       service_name: {x}-service
       dockerfile: ""{x}-dockerfile""
       container_name: preprod-{x}-container")))}

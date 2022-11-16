@@ -146,34 +146,34 @@ public class Logic
 
     private static void StandardGithubFlows(List<string> projectNames)
     {
-        var filename = $"{nameof(promote_dev)}.yml";
+        var filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
-        filename = $"{nameof(promote_release)}.yml";
+        filename = $"{nameof(promote_release)}.yml".ToFileName();
         File.WriteAllText(filename, promote_release.content);
 
-        filename = $"{nameof(pull_request_for_hotfix)}.yml";
+        filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
         File.WriteAllText(filename, pull_request_for_hotfix.content);
 
-        filename = $"{nameof(release_dev)}.yml";
+        filename = $"{nameof(release_dev)}.yml".ToFileName();
         File.WriteAllText(filename, release_dev.content(projectNames));
+        //
+        // filename = $"{nameof(release_predev)}.yml".ToFileName();
+        // File.WriteAllText(filename, release_predev.content(projectNames));
 
-        filename = $"{nameof(release_predev)}.yml";
-        File.WriteAllText(filename, release_predev.content(projectNames));
-
-        filename = $"{nameof(release_preprod)}.yml";
+        filename = $"{nameof(release_preprod)}.yml".ToFileName();
         File.WriteAllText(filename, release_preprod.content(projectNames));
 
-        filename = $"{nameof(release_prod)}.yml";
+        filename = $"{nameof(release_prod)}.yml".ToFileName();
         File.WriteAllText(filename, release_prod.content(projectNames));
 
-        filename = $"{nameof(release_qa)}.yml";
+        filename = $"{nameof(release_qa)}.yml".ToFileName();
         File.WriteAllText(filename, release_qa.content(projectNames));
 
-        filename = $"{nameof(release_reuse)}.yml";
+        filename = $"{nameof(release_reuse)}.yml".ToFileName();
         File.WriteAllText(filename, release_reuse.content);
 
-        filename = $"{nameof(transition_jira_issues)}.yml";
+        filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
 
