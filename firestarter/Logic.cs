@@ -101,7 +101,7 @@ public class Logic
 
         switch (solutionDescription.Tech)
         {
-            case TechStack.dotnet:StandardGithubFlows(projectNames);
+            case TechStack.dotnet:StandardGithubFlows(solutionDescription.Projects);
                 break;
             case TechStack.php:
                 break;
@@ -144,8 +144,10 @@ public class Logic
         File.WriteAllText(filename, transition_jira_issues.content);
     }
 
-    private static void StandardGithubFlows(List<string> projectNames)
+    private static void StandardGithubFlows(List<Project> projects)
     {
+        var projectNames = projects.Select(x=>x.Name).ToList();
+
         var filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
@@ -156,19 +158,19 @@ public class Logic
         File.WriteAllText(filename, pull_request_for_hotfix.content);
 
         filename = $"{nameof(release_dev)}.yml".ToFileName();
-        File.WriteAllText(filename, release_dev.content(projectNames));
+        File.WriteAllText(filename, release_dev.content(projects));
         //
         // filename = $"{nameof(release_predev)}.yml".ToFileName();
         // File.WriteAllText(filename, release_predev.content(projectNames));
 
         filename = $"{nameof(release_preprod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_preprod.content(projectNames));
+        File.WriteAllText(filename, release_preprod.content(projects));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_prod.content(projectNames));
+        File.WriteAllText(filename, release_prod.content(projects));
 
         filename = $"{nameof(release_qa)}.yml".ToFileName();
-        File.WriteAllText(filename, release_qa.content(projectNames));
+        File.WriteAllText(filename, release_qa.content(projects));
 
         filename = $"{nameof(release_reuse)}.yml".ToFileName();
         File.WriteAllText(filename, release_reuse.content);

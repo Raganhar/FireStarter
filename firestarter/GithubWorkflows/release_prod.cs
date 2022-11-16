@@ -2,22 +2,23 @@
 
 public static class release_prod
 {
-    public static string content(List<string> projectNames) => $@"name: Release prod [PROD02]
+    public static string content(List<Project> projects) => $@"name: Release prod [PROD02]
 
 on:
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projectNames.Select(x=>($@"release-{x}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.Name}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
       environment: prod02
       prefix: prod
       cluster: autoproff-cluster
-      service_name: {x}-service
-      dockerfile: ""{x}-dockerfile""
-      container_name: prod-{x}-container")))}
+      service_name: {x.Name}-service
+      dockerfile: ""{x.Name}-dockerfile""
+      {(string.IsNullOrWhiteSpace(x.ContainerName) ? "container_name: stage-{x.ContainerName}" : "")}"
+    )))}
 
   transition-jira-issues-on-trigger:
     runs-on: ubuntu-latest

@@ -2,22 +2,23 @@
 
 public static class release_dev
 {
-    public static string content (List<string> projectNames) => $@"name: Release dev [DEV02]
+    public static string content (List<Project> projects) => $@"name: Release dev [DEV02]
 
 on:
   push:
     branches:
       - dev
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projectNames.Select(x=>($@"release-{x}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.Name}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
       environment: dev02
       prefix: dev
       cluster: autoproff-cluster
-      service_name: {x}-service
-      dockerfile: ""{x}-dockerfile""
-      container_name: dev-{x}-container")))}
+      service_name: {x.Name}-service
+      dockerfile: ""{x.Name}-dockerfile""
+      {(string.IsNullOrWhiteSpace(x.ContainerName) ? "container_name: stage-{x.ContainerName}" : "")}"
+    )))}
 ";
 }

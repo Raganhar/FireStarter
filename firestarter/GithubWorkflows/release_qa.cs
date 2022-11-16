@@ -2,7 +2,7 @@
 
 public static class release_qa
 {
-    public static string content(List<string> projectNames) => $@"name: Release QA [STAGE02]      
+    public static string content(List<Project> projects) => $@"name: Release QA [STAGE02]      
 
 on:
   workflow_run:
@@ -22,15 +22,17 @@ jobs:
         with:
           ref: release
   
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projectNames.Select(x=>($@"release-{x}:
+  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
       environment: stage02
       prefix: stage
       cluster: autoproff-cluster
-      service_name: {x}-service
+      service_name: {x.Name}-service
       dockerfile: ""{x}-dockerfile""
-      container_name: stage-{x}-container")))}
+      {(string.IsNullOrWhiteSpace(x.ContainerName) ? "container_name: stage-{x.ContainerName}" : "")}"
+      ))
+  }
 ";
 }
