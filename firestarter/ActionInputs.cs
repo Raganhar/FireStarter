@@ -25,5 +25,7 @@ public class Project
 public enum TechStack
 {
     dotnet,
-    php
+    php,
+    js,
+    legacy_APFE
 }

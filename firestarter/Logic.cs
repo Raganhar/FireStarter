@@ -99,6 +99,23 @@ public class Logic
 
         var projectNames = solutionDescription.Projects.Select(x => x.Name).ToList();
 
+        switch (solutionDescription.Tech)
+        {
+            case TechStack.dotnet:StandardGithubFlows(projectNames);
+                break;
+            case TechStack.php:
+                break;
+            case TechStack.js:
+                break;
+            case TechStack.legacy_APFE:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private static void Apfe(List<string> projectNames)
+    {
         var filename = $"{nameof(promote_dev)}.yml";
         File.WriteAllText(filename, promote_dev.content);
 
@@ -129,6 +146,40 @@ public class Logic
         filename = $"{nameof(transition_jira_issues)}.yml";
         File.WriteAllText(filename, transition_jira_issues.content);
     }
+
+    private static void StandardGithubFlows(List<string> projectNames)
+    {
+        var filename = $"{nameof(promote_dev)}.yml";
+        File.WriteAllText(filename, promote_dev.content);
+
+        filename = $"{nameof(promote_release)}.yml";
+        File.WriteAllText(filename, promote_release.content);
+
+        filename = $"{nameof(pull_request_for_hotfix)}.yml";
+        File.WriteAllText(filename, pull_request_for_hotfix.content);
+
+        filename = $"{nameof(release_dev)}.yml";
+        File.WriteAllText(filename, release_dev.content(projectNames));
+
+        filename = $"{nameof(release_predev)}.yml";
+        File.WriteAllText(filename, release_predev.content(projectNames));
+
+        filename = $"{nameof(release_preprod)}.yml";
+        File.WriteAllText(filename, release_preprod.content(projectNames));
+
+        filename = $"{nameof(release_prod)}.yml";
+        File.WriteAllText(filename, release_prod.content(projectNames));
+
+        filename = $"{nameof(release_qa)}.yml";
+        File.WriteAllText(filename, release_qa.content(projectNames));
+
+        filename = $"{nameof(release_reuse)}.yml";
+        File.WriteAllText(filename, release_reuse.content);
+
+        filename = $"{nameof(transition_jira_issues)}.yml";
+        File.WriteAllText(filename, transition_jira_issues.content);
+    }
+
 }
 
 public static class Utils
