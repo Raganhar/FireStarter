@@ -1,6 +1,6 @@
 ﻿namespace firestarter.LegacyFlows;
 
-public static class release_prod
+public static class apfe_release_prod
 {
     public static string content(List<string> projectNames) => $@"name: Release prod [PROD02]
 

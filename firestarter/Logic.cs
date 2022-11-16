@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using firestarter.GithubActionModels.Pullrequest;
 using firestarter.GithubWorkflows;
+using firestarter.LegacyFlows;
 using firestarter.OctoStuff;
 using MoreLinq;
 using Newtonsoft.Json;
@@ -45,7 +46,8 @@ public class Logic
         var projectFolders = description.Projects.Select(x => x.Name)
             .SelectMany(x => new List<string> { $"{x}", $"{x}.tests" });
         var githubWorkflows = ".github/workflows";
-        new[] { githubWorkflows, ".infra" }.Concat(projectFolders).ForEach(x => { Directory.CreateDirectory(x); });
+        // new[] { githubWorkflows, ".infra" }.Concat(projectFolders).ForEach(x => { Directory.CreateDirectory(x); });
+        new[] { githubWorkflows}.ForEach(x => { Directory.CreateDirectory(x); });
         return githubWorkflows;
     }
 
@@ -126,22 +128,19 @@ public class Logic
         File.WriteAllText(filename, pull_request_for_hotfix.content);
 
         filename = $"{nameof(release_dev)}.yml";
-        File.WriteAllText(filename, release_dev.content(projectNames));
-
-        filename = $"{nameof(release_predev)}.yml";
-        File.WriteAllText(filename, release_predev.content(projectNames));
+        File.WriteAllText(filename, apfe_release_dev.content(projectNames));
 
         filename = $"{nameof(release_preprod)}.yml";
-        File.WriteAllText(filename, release_preprod.content(projectNames));
+        File.WriteAllText(filename, apfe_release_preprod.content(projectNames));
 
         filename = $"{nameof(release_prod)}.yml";
-        File.WriteAllText(filename, release_prod.content(projectNames));
+        File.WriteAllText(filename, apfe_release_prod.content(projectNames));
 
         filename = $"{nameof(release_qa)}.yml";
-        File.WriteAllText(filename, release_qa.content(projectNames));
+        File.WriteAllText(filename, apfe_release_qa.content(projectNames));
 
         filename = $"{nameof(release_reuse)}.yml";
-        File.WriteAllText(filename, release_reuse.content);
+        File.WriteAllText(filename, apfe_release_reuse.content);
 
         filename = $"{nameof(transition_jira_issues)}.yml";
         File.WriteAllText(filename, transition_jira_issues.content);

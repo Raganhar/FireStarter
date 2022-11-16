@@ -1,6 +1,6 @@
 ﻿namespace firestarter.LegacyFlows;
 
-public static class release_reuse
+public static class apfe_release_reuse
 {
     public static string content = @"name: release-frontend-application
 

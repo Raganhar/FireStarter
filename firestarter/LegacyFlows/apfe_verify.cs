@@ -1,6 +1,6 @@
 ﻿namespace firestarter.LegacyFlows;
 
-public static class verify
+public static class apfe_verify
 {
     public static string content = @"name: verify
 

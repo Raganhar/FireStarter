@@ -1,6 +1,6 @@
 ﻿namespace firestarter.LegacyFlows;
 
-public static class release_qa
+public static class apfe_release_qa
 {
     public static string content(List<string> projectNames) => $@"name: Release QA [STAGE02]      
 
