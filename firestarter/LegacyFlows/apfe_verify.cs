@@ -15,7 +15,7 @@ jobs:
       - name: ""Checkout""
         uses: actions/checkout@v3
         with:
-          ref: ${{{{ github.ref	}}}}
+          ref: ${{ github.ref	}}
       - uses: actions/setup-node@v3
       - run: npm install
       - run: npm run lint 

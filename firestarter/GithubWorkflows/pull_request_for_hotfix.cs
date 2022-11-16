@@ -17,7 +17,7 @@ on:
 
 jobs:
   if_merged:
-    if: ${{{{ github.event.pull_request.merged == true && startsWith('hotfix', github.event.pull_request.headRefName) }}}}
+    if: ${{ github.event.pull_request.merged == true && startsWith('hotfix', github.event.pull_request.headRefName) }}
     runs-on: ubuntu-latest
     steps:
     - name: ""Checkout""
@@ -26,8 +26,8 @@ jobs:
     - name: Create pull request
       id: create-pull-request
       env:
-        GITHUB_TOKEN: ${{{{ secrets.GITHUB_TOKEN }}}}
-        CURRENT_BRANCH: ${{{{ github.event.pull_request.head.ref }}}}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CURRENT_BRANCH: ${{ github.event.pull_request.head.ref }}
       run: |
         gh pr create -B $TARGET_BRANCH -H $CURRENT_BRANCH --title ""Merge $CURRENT_BRANCH into $TARGET_BRANCH"" --body ""**Created by Github actions**""
 ";

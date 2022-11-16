@@ -1,4 +1,6 @@
-﻿namespace firestarter;
+﻿using System.Text.Json.Serialization;
+
+namespace firestarter;
 
 public class ActionInputs
 {
@@ -7,8 +9,10 @@ public class ActionInputs
 
 public class SolutionDescription
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TechStack Tech { get; set; }
     public List<Project> Projects { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public DescriptionVersion Version { get; set; }
 }
 

@@ -22,15 +22,15 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref:
-            ${{{{ env.RELEASE_BRANCH }}}}
+            ${{ env.RELEASE_BRANCH }}
 
       - name: Create pull request
         id: create-pull-request
         continue-on-error: true
         env:
-          GITHUB_TOKEN: ${{{{ secrets.GITHUB_TOKEN }}}}
-          TARGET_BRANCH: ${{{{ env.TARGET_BRANCH }}}}
-          RELEASE_BRANCH: ${{{{ env.RELEASE_BRANCH }}}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_BRANCH: ${{ env.TARGET_BRANCH }}
+          RELEASE_BRANCH: ${{ env.RELEASE_BRANCH }}
         run: |
           echo $RELEASE_BRANCH
           echo $TARGET_BRANCH 

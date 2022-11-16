@@ -44,7 +44,7 @@ jobs:
   deploy:
     name: ""Deploy""
     runs-on: ubuntu-latest
-    environment: ${{{{ inputs.environment }}}}
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -52,9 +52,9 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{{{ secrets.AWS_ACCESS_KEY_ID }}}}
-          aws-secret-access-key: ${{{{ secrets.AWS_SECRET_ACCESS_KEY }}}}
-          aws-region: ${{{{ inputs.region }}}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.region }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -62,7 +62,7 @@ jobs:
 
       - name: Set container_image_name
         env:
-          CONTAINER_NAME: ${{{{ inputs.prefix }}}}-${{{{ inputs.service_name }}}}
+          CONTAINER_NAME: ${{ inputs.prefix }}-${{ inputs.service_name }}
         run: |
           echo CONTAINER_IMAGE_NAME=""$CONTAINER_NAME"" >> $GITHUB_ENV
 
@@ -70,17 +70,17 @@ jobs:
         id: override-container-name
         if: inputs.container_name
         env:
-          CONTAINER_NAME: ${{{{ inputs.container_name }}}}
+          CONTAINER_NAME: ${{ inputs.container_name }}
         run: |
           echo CONTAINER_IMAGE_NAME=""$CONTAINER_NAME"" >> $GITHUB_ENV
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{{{ steps.login-ecr.outputs.registry }}}}
-          IMAGE_TAG: ${{{{ github.sha }}}}
-          ECR_REPOSITORY: ${{{{ env.CONTAINER_IMAGE_NAME }}}}
-          DOCKERFILE: ${{{{ inputs.dockerfile }}}}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+          ECR_REPOSITORY: ${{ env.CONTAINER_IMAGE_NAME }}
+          DOCKERFILE: ${{ inputs.dockerfile }}
         run: |
           # Build and tag image
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE .
@@ -93,8 +93,8 @@ jobs:
       - name: Update ECS image version
         id: use-image
         env:
-          ECS_SERVICE: ${{{{ inputs.prefix }}}}-${{{{ inputs.service_name }}}}
-          ECS_CLUSTER: ${{{{ inputs.prefix }}}}-${{{{ inputs.cluster }}}}
+          ECS_SERVICE: ${{ inputs.prefix }}-${{ inputs.service_name }}
+          ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
         run: |
           aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment 
 ";

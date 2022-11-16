@@ -36,11 +36,11 @@ jobs:
       - name: transition jira tickets
         uses: Raganhar/nup-github-action-jira-transition@v2
         env:
-          GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
+          GITHUB_CONTEXT: ""${{ toJson(github) }}""
         with:
-          jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
-          jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
-          jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
+          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
+          jira-url: ${{ secrets.JIRA_BASE_URL }}
+          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
           branch_to_compare_to: main
           main-jira-transition: done
           release-jira-transition: QA

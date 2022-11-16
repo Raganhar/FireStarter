@@ -2,7 +2,6 @@
 using firestarter.GithubActionModels.Pullrequest;
 using firestarter.GithubWorkflows;
 using firestarter.LegacyFlows;
-using firestarter.OctoStuff;
 using MoreLinq;
 using Newtonsoft.Json;
 
@@ -13,7 +12,6 @@ public class Logic
     private readonly ILogger _logger;
     private readonly ActionInputs _options;
     private readonly GithubActionContext_pullrequest _githubContext;
-    private BranchComparer _branchComparer;
     private string _currentBranchName;
     public static string _solutionDescriptionPath = ".ap/solution.json";
 
@@ -109,7 +107,7 @@ public class Logic
                 break;
             case TechStack.js:
                 break;
-            case TechStack.legacy_APFE:
+            case TechStack.legacy_APFE:Apfe(projectNames);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -118,31 +116,31 @@ public class Logic
 
     private static void Apfe(List<string> projectNames)
     {
-        var filename = $"{nameof(promote_dev)}.yml";
+        var filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
-        filename = $"{nameof(promote_release)}.yml";
+        filename = $"{nameof(promote_release)}.yml".ToFileName();
         File.WriteAllText(filename, promote_release.content);
 
-        filename = $"{nameof(pull_request_for_hotfix)}.yml";
+        filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
         File.WriteAllText(filename, pull_request_for_hotfix.content);
 
-        filename = $"{nameof(release_dev)}.yml";
+        filename = $"{nameof(release_dev)}.yml".ToFileName();
         File.WriteAllText(filename, apfe_release_dev.content(projectNames));
 
-        filename = $"{nameof(release_preprod)}.yml";
+        filename = $"{nameof(release_preprod)}.yml".ToFileName();
         File.WriteAllText(filename, apfe_release_preprod.content(projectNames));
 
-        filename = $"{nameof(release_prod)}.yml";
+        filename = $"{nameof(release_prod)}.yml".ToFileName();
         File.WriteAllText(filename, apfe_release_prod.content(projectNames));
 
-        filename = $"{nameof(release_qa)}.yml";
+        filename = $"{nameof(release_qa)}.yml".ToFileName();
         File.WriteAllText(filename, apfe_release_qa.content(projectNames));
 
-        filename = $"{nameof(release_reuse)}.yml";
+        filename = $"{nameof(release_reuse)}.yml".ToFileName();
         File.WriteAllText(filename, apfe_release_reuse.content);
 
-        filename = $"{nameof(transition_jira_issues)}.yml";
+        filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
 
