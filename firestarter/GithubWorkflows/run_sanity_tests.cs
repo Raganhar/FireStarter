@@ -11,12 +11,15 @@ on:
       - Release QA \[STAGE02\]
     types:
       - completed
+
 jobs:
   sanity_tests:
     runs-on: ubuntu-latest
     steps:
       - name: ""Checkout""
         uses: actions/checkout@v3
+        with:
+          ref: release 
       - uses: actions/setup-dotnet@v2
         with:
           dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
