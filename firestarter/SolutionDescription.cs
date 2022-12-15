@@ -13,7 +13,7 @@ public class SolutionDescription
 
 public enum DescriptionVersion
 {
-    v1
+    v1=1
 }
 
 public class Project
@@ -37,6 +37,7 @@ public class DeprecatedProperties
 
 public enum TechStack
 {
+    invalid,
     dotnet,
     php,
     js,
@@ -46,5 +47,6 @@ public enum TechStack
 
 public enum SupportedLegacySystems
 {
-    apfe
+    apfe,
+    auction_service
 }

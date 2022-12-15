@@ -12,7 +12,9 @@ public class FireStarterTest_legacyFlows
     {
         var conf = new ActionInputs
         {
+            // Directory = "C:\\Code\\NotificationService",
             Directory = "C:\\Code\\AuctionService",
+            // Directory = "C:\\Code\\ProductService",
             // Directory = "C:\\Code\\ap-frontend",
         };
      

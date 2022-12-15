@@ -81,13 +81,21 @@ public class Logic
             _logger.LogInformation(file);
             Console.WriteLine(file);
         }
+
+        var bob = new List<string> { "", "" };
+
+        var b = new[] { "", "" };
+
+        var list = b.GroupBy(x=>x).ToDictionary(x=>x.Key,c=>c);
+        
     }
 
     private static SolutionDescription? GetSolutionDescription()
     {
         if (File.Exists(_solutionDescriptionPath))
         {
-            return JsonConvert.DeserializeObject<SolutionDescription>(File.ReadAllText(_solutionDescriptionPath));
+            var readAllText = File.ReadAllText(_solutionDescriptionPath);
+            return JsonConvert.DeserializeObject<SolutionDescription>(readAllText);
         }
 
         throw new ArgumentException($"unable to find solution description at {_solutionDescriptionPath}");
@@ -102,6 +110,8 @@ public class Logic
         switch (solutionDescription.LegacySystem)
         {
             case SupportedLegacySystems.apfe:Apfe(projectNames);
+                break;
+            case SupportedLegacySystems.auction_service:AuctionService(solutionDescription.Projects);
                 break;
             case null: StandardGithubFlows(solutionDescription.Projects);
                 break;
@@ -139,11 +149,50 @@ public class Logic
         filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
+    
+    private static void AuctionService(List<Project> projects)
+    {
+        var filename = $"{nameof(verify)}.yml".ToFileName();
+        File.WriteAllText(filename, verify.content(projects));
+        
+        filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
+        File.WriteAllText(filename, run_sanity_tests.content(projects));
+        
+        filename = $"{nameof(promote_dev)}.yml".ToFileName();
+        File.WriteAllText(filename, promote_dev.content);
+
+        filename = $"{nameof(promote_release)}.yml".ToFileName();
+        File.WriteAllText(filename, promote_release.content);
+
+        filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
+        File.WriteAllText(filename, pull_request_for_hotfix.content);
+
+        filename = $"{nameof(release_dev)}.yml".ToFileName();
+        File.WriteAllText(filename, release_dev.content(projects));
+
+        filename = $"{nameof(release_preprod)}.yml".ToFileName();
+        File.WriteAllText(filename, release_preprod.content(projects));
+
+        filename = $"{nameof(release_prod)}.yml".ToFileName();
+        File.WriteAllText(filename, release_prod.content(projects));
+
+        filename = $"{nameof(release_qa)}.yml".ToFileName();
+        File.WriteAllText(filename, release_qa.content(projects));
+
+        filename = $"{nameof(release_reuse)}.yml".ToFileName();
+        File.WriteAllText(filename,   firestarter.LegacyFlows.AuctionService.release_reuse.content);
+
+        filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
+        File.WriteAllText(filename, transition_jira_issues.content);
+    }
 
     private static void StandardGithubFlows(List<Project> projects)
     {
         var filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
+        
+        filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
+        File.WriteAllText(filename, run_sanity_tests.content(projects));
         
         filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
@@ -172,7 +221,6 @@ public class Logic
         filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
-
 }
 
 public static class Utils

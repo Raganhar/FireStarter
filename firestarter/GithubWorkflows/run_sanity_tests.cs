@@ -1,13 +1,18 @@
 ﻿namespace firestarter.GithubWorkflows;
 
-public static class verify
+public static class run_sanity_tests
 {
-  public static string content(List<Project> projects) => $@"name: verify
+  public static string content(List<Project> projects) => $@"
+name: run sanity tests
 
 on:
-  pull_request:
+  workflow_run:
+    workflows:
+      - Release QA \[STAGE02\]
+    types:
+      - completed
 jobs:
-  verify:
+  sanity_tests:
     runs-on: ubuntu-latest
     steps:
       - name: ""Checkout""
@@ -17,6 +22,6 @@ jobs:
           dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
       - run: dotnet restore
       - run: dotnet build --no-restore
-      - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")}
+      - run: dotnet test --no-build --no-restore --filter Category=SanityTest
 ";
 }
