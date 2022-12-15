@@ -2,28 +2,30 @@
 
 public static class release_prod
 {
-    public static string content(List<string> projectNames) => $@"name: Release prod [PROD02]
+    public static string content(List<Project> projects) => $@"name: Release prod [PROD02]
 
 on:
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projectNames.Select(x=>($@"release-{x}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
       environment: prod02
       prefix: prod
-      cluster: {x}-cluster
-      service_name: {x}-service
-      dockerfile: ""{x}-dockerfile""
-      container_name: prod-{x}-container")))}
+      cluster: autoproff-cluster
+      service_name: {x.ServiceName}
+      dockerfile: ""{x.DockerFile}""
+      branch_name: main
+      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: prod-{x.LegacyProperties?.ContainerName}" : "")}"
+    )))}
 
   transition-jira-issues-on-trigger:
     runs-on: ubuntu-latest
     steps:
       - name: transition jira tickets
-        uses: Raganhar/nup-github-action-jira-transition@v2
+        uses: AUTOProff/ap-github-action-jira-transition@v1
         env:
           GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
         with:

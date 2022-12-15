@@ -1,4 +1,4 @@
-﻿namespace firestarter.GithubWorkflows;
+﻿namespace firestarter.LegacyFlows.AuctionService;
 
 public static class release_reuse
 {
@@ -102,5 +102,13 @@ jobs:
           ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
         run: |
           aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment 
+
+      - name: Update ECS image version for public alb
+        id: use-image-alb
+        env:
+          ECS_SERVICE: ${{ inputs.prefix }}-${{ inputs.service_name }}
+          ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
+        run: |
+          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE-alb --force-new-deployment 
 ";
 }

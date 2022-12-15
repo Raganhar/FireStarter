@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: transition-jira-issues
-        uses: Raganhar/nup-github-action-jira-transition@v2
+        uses: AUTOProff/ap-github-action-jira-transition@v1
         env:
           GITHUB_CONTEXT: ""${{ toJson(github) }}""
         with:
@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: transition-jira-issues
-        uses: Raganhar/nup-github-action-jira-transition@v2
+        uses: AUTOProff/ap-github-action-jira-transition@v1
         env:
           GITHUB_CONTEXT: ""${{ toJson(github) }}""
         with:
