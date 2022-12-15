@@ -1,28 +1,32 @@
-only 2 use cases are supported:
-- Transition tickets on PR
+call firestarter.exe with optional directory which contains '.ap' folder which should contain a solution.json
 
-        uses: Raganhar/firestarter@main
-        env:
-          GITHUB_CONTEXT: "${{ toJson(github) }}"
-        with:
-          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
-          jira-url: ${{ secrets.JIRA_BASE_URL }}
-          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
-          main-jira-transition: done
-          release-jira-transition: in progress
+example solutionDescription
 
-
-- Transition tickets on push
-
-        uses: Raganhar/firestarter@main
-        env:
-          GITHUB_CONTEXT: "${{ toJson(github) }}"
-        with:
-          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
-          jira-url: ${{ secrets.JIRA_BASE_URL }}
-          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
-          main-jira-transition: done
-          release-jira-transition: in progress
-          branch_to_compare_to: main
-
+```{
+  "Projects": [
+    {
+      "Name": "auction",
+      "Tech": "legacy_dotnet"
+    },
+    {
+      "Name": "auction-alb",
+      "Tech": "legacy_dotnet",
+      "LegacyProperties":{
+        "ServiceName":"auction-service-alb",
+        "ContainerName":"auction-service"
+      }
+    },
+    {
+      "Name": "auction",
+      "Tech": "legacy_dotnet",
+      "LegacyProperties":{
+        "DockerFile":"DockerfileBackground",
+        "ServiceName":"auction-service-worker",
+        "ContainerName":"auction-service-background-worker"
+      }
+    }
+  ],
+  "LegacySystem":"auction_service",
+  "Version": "v1"
+}
 
