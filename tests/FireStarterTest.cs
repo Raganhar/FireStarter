@@ -5,6 +5,7 @@ using NUnit.Framework;
 
 namespace tests;
 
+[Ignore("integration tests")]
 public class FireStarterTest
 {
     private SolutionDescription _solutionDescription = new SolutionDescription
