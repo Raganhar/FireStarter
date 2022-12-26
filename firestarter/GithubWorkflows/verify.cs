@@ -76,6 +76,11 @@ jobs:
       with:
         string: ${{{{ github.event.repository.name }}}}
 
+    - id: ""lower_owner""
+      uses: ASzc/change-string-case-action@v2
+      with:
+        string: ${{{{ github.repository_owner }}}}
+
     - name: Authenticate with the Github Container Registry 🔐
       run: echo ${{{{ secrets.GITHUB_TOKEN }}}} | docker login ghcr.io -u USERNAME --password-stdin
 
@@ -87,7 +92,7 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ghcr.io/raganhar/${{{{steps.lower_repo.outputs.lowercase}}}}:${{{{env.artifact_version}}}}
+        tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/${{{{steps.lower_repo.outputs.lowercase}}}}:${{{{env.artifact_version}}}}
 
     - name: Create tag
       if: steps.build-n-push.outcome == 'success' 

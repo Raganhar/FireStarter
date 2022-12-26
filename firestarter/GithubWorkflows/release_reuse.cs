@@ -74,6 +74,11 @@ jobs:
         with:
           string: ${{ github.event.repository.name }}
 
+      - id: ""lower_owner""
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ github.repository_owner }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -113,10 +118,10 @@ jobs:
           ECR_REPOSITORY: ${{ env.CONTAINER_IMAGE_NAME }}
         run: |
           echo ""pulling image from ghcr""
-          docker pull ghcr.io/${{github.repository_owner}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}}
+          docker pull ghcr.io/${{steps.lower_owner.outputs.lowercase}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}}
           
           echo ""renaming/tagging image from to be the same as ECR image""
-          docker tag ghcr.io/${{github.repository_owner}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}} $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker tag ghcr.io/${{steps.lower_owner.outputs.lowercase}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}} $ECR_REGISTRY/$ECR_REPOSITORY:latest
           
           echo ""pushing image to ecr""
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace tests;
 
-[Ignore("integration test")]
+// [Ignore("integration test")]
 public class FireStarterTest_legacyFlows
 {
     [Test]
