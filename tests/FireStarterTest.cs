@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace tests;
 
-[Ignore("integration tests")]
+// [Ignore("integration tests")]
 public class FireStarterTest
 {
     private SolutionDescription _solutionDescription = new SolutionDescription
@@ -29,7 +29,7 @@ public class FireStarterTest
     {
         var conf = new ActionInputs
         {
-            Directory = "C:\\Code\\Random",
+            Directory = "C:\\Code\\auto-generate-pipeline-files",
         };
         // Directory.Delete(conf.Directory, true);
         Directory.CreateDirectory(conf.Directory);
