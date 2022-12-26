@@ -54,6 +54,26 @@ jobs:
         with:
           ref: ${{ inputs.branch_name }}
 
+      - name: ""Find tag to release""
+        env:
+          IS_TAG_CONTEXT: ${{ github.ref_type == 'tag' }}
+        run: |
+          if ${IS_TAG_CONTEXT}; then
+            TAG=""${{github.ref_name}}""
+          else
+            git fetch --prune --unshallow
+            TAG=$(git describe --tag --abbrev=0)
+          fi
+          echo ""TAG=${TAG}"" >> $GITHUB_ENV
+
+      - name: container tag
+        run: echo newly set env variable ${{env.TAG}}
+
+      - id: ""lower_repo""
+        uses: ASzc/change-string-case-action@v2
+        with:
+          string: ${{ github.event.repository.name }}
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -64,6 +84,13 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set container_image_name
         env:
@@ -79,28 +106,35 @@ jobs:
         run: |
           echo CONTAINER_IMAGE_NAME=""$CONTAINER_NAME"" >> $GITHUB_ENV
 
-      - name: Build, tag, and push image to Amazon ECR
+      - name: Pull Image from ghcr.io
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
           ECR_REPOSITORY: ${{ env.CONTAINER_IMAGE_NAME }}
-          DOCKERFILE: ${{ inputs.dockerfile }}
         run: |
-          # Build and tag image
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f $DOCKERFILE .
-          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          # Push image
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo ""pulling image from ghcr""
+          docker pull ghcr.io/${{github.repository_owner}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}}
+          
+          echo ""renaming/tagging image from to be the same as ECR image""
+          docker tag ghcr.io/${{github.repository_owner}}/${{steps.lower_repo.outputs.lowercase}}:${{env.TAG}} $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+          echo ""pushing image to ecr""
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-          # echo ""::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG""
 
-      - name: Update ECS image version
-        id: use-image
+          echo ""image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"" >> $GITHUB_OUTPUT
+
+      - name: Force ECS update
         env:
           ECS_SERVICE: ${{ inputs.prefix }}-${{ inputs.service_name }}
           ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
         run: |
-          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment 
+          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
+          
+      - name: Wait until stable
+        env:
+          ECS_SERVICE: ${{ inputs.prefix }}-${{ inputs.service_name }}
+          ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
+        run: |
+          aws ecs wait services-stable --cluster $ECS_CLUSTER --service $ECS_SERVICE
 ";
 }
