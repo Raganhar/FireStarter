@@ -5,9 +5,11 @@ public static class release_dev
     public static string content (List<Project> projects) => $@"name: Release dev [DEV02]
 
 on:
-  push:
-    branches:
-      - dev
+  create:
+    tags:
+      - 'dev.*'
+  workflow_dispatch:
+
 jobs:
   {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit

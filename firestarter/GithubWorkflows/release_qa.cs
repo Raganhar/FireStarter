@@ -5,14 +5,11 @@ public static class release_qa
     public static string content(List<Project> projects) => $@"name: Release QA [STAGE02]      
 
 on:
-  workflow_run:
-    workflows:
-      - Promote dev
-    types:
-      - completed
-  push:
-    branches:
-      - ""release""
+  create:
+    tags:
+      - 'release.*'
+  workflow_dispatch:
+
 jobs:
   {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x.ServiceName}:
     secrets: inherit
