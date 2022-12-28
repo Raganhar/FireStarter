@@ -5,9 +5,9 @@ public static class release_preprod
     public static string content(List<Project> projects) => $@"name: Release preprod [DEV03]    
 
 on:
-  create:
+  push:
     tags:
-      - 'main.*'
+      - main.**
   workflow_dispatch:
 
 jobs:

@@ -5,9 +5,9 @@ public static class release_qa
     public static string content(List<Project> projects) => $@"name: Release QA [STAGE02]      
 
 on:
-  create:
+  push:
     tags:
-      - 'release.*'
+      - release.**
   workflow_dispatch:
 
 jobs:

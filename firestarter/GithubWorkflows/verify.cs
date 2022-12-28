@@ -26,8 +26,7 @@ jobs:
       - run: dotnet build --no-restore
       - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")}
 
-
-  build_n_push_docker_image:
+  {(projects.Select(x=>$@"build_n_push_docker_image_{x.Name}:
     needs: verify
     runs-on: ubuntu-latest
     steps:
@@ -98,6 +97,7 @@ jobs:
       if: steps.build-n-push.outcome == 'success' 
       run: |
         git tag ${{{{ env.artifact_version }}}}
-        git push --tags
+        git push --tags"))}
+  
 ";
 }
