@@ -47,17 +47,5 @@ jobs:
           release-jira-transition: QA
           jira_state_when_revert: blocked
           ignore_tickets_in_following_states: pending release
-
-      - name: Checkout release
-        uses: actions/checkout@v3
-        with:
-            token: ${{ secrets.MY_PAT }}
-            ref: release
-            fetch-depth: 0
-
-      - name: Create release tag
-        run: |
-          git tag ${{ env.artifact_version }}
-          git push --tags
 ";
 }
