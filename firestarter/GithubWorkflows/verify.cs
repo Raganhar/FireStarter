@@ -26,7 +26,7 @@ jobs:
       - run: dotnet build --no-restore
       - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")}
 
-  {(projects.Select(x=>$@"build_n_push_docker_image_{x.Name}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>$@"build_n_push_docker_image_{x.Name}:
     needs: verify
     runs-on: ubuntu-latest
     steps:
@@ -91,13 +91,12 @@ jobs:
         file: Dockerfile
         platforms: linux/amd64
         push: true
-        tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/${{{{steps.lower_repo.outputs.lowercase}}}}:${{{{env.artifact_version}}}}
+        tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName}:${{{{env.artifact_version}}}}
 
     - name: Create tag
       if: steps.build-n-push.outcome == 'success' 
       run: |
         git tag ${{{{ env.artifact_version }}}}
         git push --tags"))}
-  
 ";
 }
