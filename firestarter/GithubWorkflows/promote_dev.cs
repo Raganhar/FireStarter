@@ -18,12 +18,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: dev
+          token: ${{ secrets.MY_PAT }}
 
       - name: Remove old release branch
         continue-on-error: true # Fails if there is no old release branch
         run: |
           git fetch --all
-          git push origin --delete release
 
       - name: Create new release branch
         id: create-branch
@@ -31,7 +31,8 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@autoproff.com
           git checkout -b ""release""
-          git push --set-upstream origin ""release""
+          git reset --hard dev
+          git push --force origin release
 
       - name: transition jira tickets
         uses: AUTOProff/ap-github-action-jira-transition@v1
