@@ -36,7 +36,6 @@ jobs:
       prefix: dev03
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      dockerfile: ""{x.DockerFile}""
       branch_name: main
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: dev03-{x.LegacyProperties.ContainerName}" : "")}"
     )))}

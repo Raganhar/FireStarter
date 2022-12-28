@@ -16,7 +16,6 @@ jobs:
       prefix: prod
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      dockerfile: ""{x.DockerFile}""
       branch_name: main
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: prod-{x.LegacyProperties?.ContainerName}" : "")}"
     )))}

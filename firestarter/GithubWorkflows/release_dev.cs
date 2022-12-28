@@ -19,7 +19,6 @@ jobs:
       prefix: dev
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      dockerfile: ""{x.DockerFile}""
       branch_name: dev
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: dev-{x.LegacyProperties.ContainerName}" : "")}"
     )))}

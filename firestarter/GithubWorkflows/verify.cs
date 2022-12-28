@@ -88,7 +88,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: Dockerfile
+        file: {x.DockerFile}
         platforms: linux/amd64
         push: true
         tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName}:${{{{env.artifact_version}}}}

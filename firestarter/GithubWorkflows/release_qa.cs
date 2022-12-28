@@ -19,7 +19,6 @@ jobs:
       prefix: stage
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      dockerfile: ""{x.DockerFile}""
       branch_name: release
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: stage-{x.LegacyProperties.ContainerName}" : "")}"
       ))
