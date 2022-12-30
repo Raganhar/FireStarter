@@ -9,8 +9,15 @@ public class SolutionDescription
     public DescriptionVersion Version { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SupportedLegacySystems? LegacySystem { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public GitWorkflow? GitWorkflow { get; set; }
 }
 
+public enum GitWorkflow
+{
+    TrunkBased,
+    Gitflow
+}
 public enum DescriptionVersion
 {
     v1=1
