@@ -15,7 +15,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
-      environment: stage02
+      environment: {(solution.GitWorkflow == GitWorkflow.Gitflow?"stage02":"stage")}
       prefix: stage
       cluster: autoproff-cluster
       service_name: {x.ServiceName}

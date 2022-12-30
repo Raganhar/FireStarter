@@ -15,7 +15,7 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
-      environment: dev02
+      environment: {(solution.GitWorkflow == GitWorkflow.Gitflow?"dev02":"dev")}
       prefix: dev
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
