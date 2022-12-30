@@ -10,7 +10,7 @@ public class SolutionDescription
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public SupportedLegacySystems? LegacySystem { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
-    public GitWorkflow? GitWorkflow { get; set; }
+    public GitWorkflow GitWorkflow { get; set; }
 }
 
 public enum GitWorkflow

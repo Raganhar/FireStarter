@@ -2,13 +2,13 @@
 
 public static class release_prod
 {
-    public static string content(List<Project> projects) => $@"name: Release prod [PROD02]
+    public static string content(SolutionDescription solution) => $@"name: Release prod [PROD02]
 
 on:
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.ServiceName}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",solution.Projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:

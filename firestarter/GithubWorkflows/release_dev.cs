@@ -2,16 +2,16 @@
 
 public static class release_dev
 {
-    public static string content (List<Project> projects) => $@"name: Release dev [DEV02]
+    public static string content (SolutionDescription solution) => $@"name: Release dev [DEV02]
 
 on:
   push:
     tags:
-      - dev.**
+      - {(solution.GitWorkflow == GitWorkflow.Gitflow?"dev":"main")}.**
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>($@"release-{x.ServiceName}:
+  {string.Join(Environment.NewLine+Environment.NewLine+"  ",solution.Projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
@@ -19,7 +19,7 @@ jobs:
       prefix: dev
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      branch_name: dev
+      branch_name: {(solution.GitWorkflow == GitWorkflow.Gitflow?"dev":"main")}
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: dev-{x.LegacyProperties.ContainerName}" : "")}"
     )))}
 ";

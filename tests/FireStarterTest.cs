@@ -11,6 +11,7 @@ public class FireStarterTest
     private SolutionDescription _solutionDescription = new SolutionDescription
     {
         Version = DescriptionVersion.v1,
+        GitWorkflow = GitWorkflow.TrunkBased,
         Projects = new List<Project>
         {
             new Project

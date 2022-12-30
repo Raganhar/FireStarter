@@ -111,9 +111,17 @@ public class Logic
         {
             case SupportedLegacySystems.apfe:Apfe(projectNames);
                 break;
-            case SupportedLegacySystems.auction_service:AuctionService(solutionDescription.Projects);
-                break;
-            case null: StandardGithubFlows(solutionDescription.Projects);
+            // case SupportedLegacySystems.auction_service:AuctionService(solutionDescription);
+            //     break;
+            case null:
+                if (solutionDescription.GitWorkflow == GitWorkflow.TrunkBased)
+                {
+                    TrunkBasedGithubFlows(solutionDescription);
+                }
+                else
+                {
+                    StandardGithubFlows(solutionDescription);
+                }
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -150,13 +158,51 @@ public class Logic
         File.WriteAllText(filename, transition_jira_issues.content);
     }
     
-    private static void AuctionService(List<Project> projects)
+    // private static void AuctionService(SolutionDescription solution)
+    // {
+    //     var projects = solution.Projects;
+    //     var filename = $"{nameof(verify)}.yml".ToFileName();
+    //     File.WriteAllText(filename, verify.content(projects));
+    //     
+    //     filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
+    //     File.WriteAllText(filename, run_sanity_tests.content(projects));
+    //     
+    //     filename = $"{nameof(promote_dev)}.yml".ToFileName();
+    //     File.WriteAllText(filename, promote_dev.content);
+    //
+    //     filename = $"{nameof(promote_release)}.yml".ToFileName();
+    //     File.WriteAllText(filename, promote_release.content);
+    //
+    //     filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
+    //     File.WriteAllText(filename, pull_request_for_hotfix.content);
+    //
+    //     filename = $"{nameof(release_dev)}.yml".ToFileName();
+    //     File.WriteAllText(filename, release_dev.content(solution));
+    //
+    //     filename = $"{nameof(release_preprod)}.yml".ToFileName();
+    //     File.WriteAllText(filename, release_preprod.content(projects));
+    //
+    //     filename = $"{nameof(release_prod)}.yml".ToFileName();
+    //     File.WriteAllText(filename, release_prod.content(solution));
+    //
+    //     filename = $"{nameof(release_qa)}.yml".ToFileName();
+    //     File.WriteAllText(filename, release_qa.content(solution));
+    //
+    //     filename = $"{nameof(release_reuse)}.yml".ToFileName();
+    //     File.WriteAllText(filename,   firestarter.LegacyFlows.AuctionService.release_reuse.content);
+    //
+    //     filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
+    //     File.WriteAllText(filename, transition_jira_issues.content);
+    // }
+
+    private static void StandardGithubFlows(SolutionDescription solution)
     {
+        var projects = solution.Projects;
         var filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
         
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
-        File.WriteAllText(filename, run_sanity_tests.content(projects));
+        File.WriteAllText(filename, run_sanity_tests.content(solution));
         
         filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
@@ -168,52 +214,43 @@ public class Logic
         File.WriteAllText(filename, pull_request_for_hotfix.content);
 
         filename = $"{nameof(release_dev)}.yml".ToFileName();
-        File.WriteAllText(filename, release_dev.content(projects));
+        File.WriteAllText(filename, release_dev.content(solution));
 
         filename = $"{nameof(release_preprod)}.yml".ToFileName();
         File.WriteAllText(filename, release_preprod.content(projects));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_prod.content(projects));
+        File.WriteAllText(filename, release_prod.content(solution));
 
         filename = $"{nameof(release_qa)}.yml".ToFileName();
-        File.WriteAllText(filename, release_qa.content(projects));
+        File.WriteAllText(filename, release_qa.content(solution));
 
         filename = $"{nameof(release_reuse)}.yml".ToFileName();
-        File.WriteAllText(filename,   firestarter.LegacyFlows.AuctionService.release_reuse.content);
+        File.WriteAllText(filename, release_reuse.content);
 
         filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
-
-    private static void StandardGithubFlows(List<Project> projects)
+    private static void TrunkBasedGithubFlows(SolutionDescription solution)
     {
+        var projects = solution.Projects;
         var filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
         
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
-        File.WriteAllText(filename, run_sanity_tests.content(projects));
+        File.WriteAllText(filename, run_sanity_tests.content(solution));
         
-        filename = $"{nameof(promote_dev)}.yml".ToFileName();
-        File.WriteAllText(filename, promote_dev.content);
-
-        filename = $"{nameof(promote_release)}.yml".ToFileName();
-        File.WriteAllText(filename, promote_release.content);
-
-        filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
-        File.WriteAllText(filename, pull_request_for_hotfix.content);
-
         filename = $"{nameof(release_dev)}.yml".ToFileName();
-        File.WriteAllText(filename, release_dev.content(projects));
+        File.WriteAllText(filename, release_dev.content(solution));
 
         filename = $"{nameof(release_preprod)}.yml".ToFileName();
         File.WriteAllText(filename, release_preprod.content(projects));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_prod.content(projects));
+        File.WriteAllText(filename, release_prod.content(solution));
 
         filename = $"{nameof(release_qa)}.yml".ToFileName();
-        File.WriteAllText(filename, release_qa.content(projects));
+        File.WriteAllText(filename, release_qa.content(solution));
 
         filename = $"{nameof(release_reuse)}.yml".ToFileName();
         File.WriteAllText(filename, release_reuse.content);

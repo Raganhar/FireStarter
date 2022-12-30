@@ -2,16 +2,16 @@
 
 public static class release_qa
 {
-    public static string content(List<Project> projects) => $@"name: Release QA [STAGE02]      
+    public static string content(SolutionDescription solution) => $@"name: Release QA [STAGE02]      
 
 on:
   push:
     tags:
-      - release.**
+      - {(solution.GitWorkflow == GitWorkflow.Gitflow?"release":"main")}.**
   workflow_dispatch:
 
 jobs:
-  {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"release-{x.ServiceName}:
+  {string.Join(Environment.NewLine + Environment.NewLine + "  ",solution.Projects.Select(x => $@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
@@ -19,7 +19,7 @@ jobs:
       prefix: stage
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
-      branch_name: release
+      branch_name: {(solution.GitWorkflow == GitWorkflow.Gitflow?"release":"main")}
       {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: stage-{x.LegacyProperties.ContainerName}" : "")}"
       ))
   }
