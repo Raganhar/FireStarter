@@ -6,13 +6,16 @@ public static class release_prod
 
 on:
   workflow_dispatch:
+  {(solution.GitWorkflow == GitWorkflow.Gitflow?"":@"push:
+    tags:
+      - main.**")}
 
 jobs:
   {string.Join(Environment.NewLine+Environment.NewLine+"  ",solution.Projects.Select(x=>($@"release-{x.ServiceName}:
     secrets: inherit
     uses: ./.github/workflows/release-reuse.yml
     with:
-      environment: prod02
+      environment: {(solution.GitWorkflow == GitWorkflow.Gitflow?"prod02":"prod")}
       prefix: prod
       cluster: autoproff-cluster
       service_name: {x.ServiceName}
