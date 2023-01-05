@@ -16,10 +16,10 @@ public class FireStarterTest_legacyFlows
             // Directory = "C:\\Code\\NotificationService",
             // Directory = "C:\\Code\\ManagedService",
             // Directory = "C:\\Code\\AuctionService",
-            // Directory = "C:\\Code\\ProductService",
+            Directory = "C:\\Code\\ProductService",
             // Directory = "C:\\Code\\ap-frontend",
             // Directory = "C:\\Code\\ghcr-ecr-deploy-push",
-            Directory = "C:\\Code\\tbd-integration-api",
+            // Directory = "C:\\Code\\tbd-integration-api",
             //.2
         };
      
