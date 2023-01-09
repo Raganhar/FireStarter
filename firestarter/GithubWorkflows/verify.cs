@@ -18,6 +18,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: ""Checkout""
         uses: actions/checkout@v3
@@ -93,7 +94,7 @@ jobs:
         file: {x.DockerFile}
         platforms: linux/amd64
         push: true
-        tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName}:${{{{env.artifact_version}}}}"))}
+        tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName.ToLowerInvariant()}:${{{{env.artifact_version}}}}"))}
 
   {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>$@"push_tag_{x.Name}:
       needs: [{string.Join(",",projects.Select(c=>NamingBuildStep(c.Name)))}]
