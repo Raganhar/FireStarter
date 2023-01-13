@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using firestarter.GithubActionModels.Pullrequest;
 using firestarter.GithubWorkflows;
 using firestarter.LegacyFlows;
@@ -201,6 +201,9 @@ public class Logic
         var filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
         
+        filename = $"{nameof(clean_images)}.yml".ToFileName();
+        File.WriteAllText(filename, clean_images.content(solution));
+        
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
         File.WriteAllText(filename, run_sanity_tests.content(solution));
         
@@ -236,6 +239,9 @@ public class Logic
         var projects = solution.Projects;
         var filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
+        
+        filename = $"{nameof(clean_images)}.yml".ToFileName();
+        File.WriteAllText(filename, clean_images.content(solution));
         
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
         File.WriteAllText(filename, run_sanity_tests.content(solution));
