@@ -20,6 +20,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      - name: validate naming of branch
+        uses: Raganhar/nup-jira-ticket-type@v1
+        env:
+          GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
+        with:
+          jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
+          jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
+          jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
       - name: ""Checkout""
         uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v2
