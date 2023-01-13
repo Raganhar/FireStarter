@@ -18,7 +18,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - name: ""Checkout""
         uses: actions/checkout@v3
