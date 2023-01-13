@@ -1,7 +1,7 @@
-$gitRepos = @("auto-generate-pipeline-files")
+$gitRepos = @("AuctionService","ProductService","tbd-integration-api")
 foreach ($repo in $gitRepos) {
-    git clone  ("https://github.com/Raganhar/" +$repo+".git") 
-    cd auto-generate-pipeline-files
+    git clone  ("https://github.com/AUTOProff/" +$repo+".git") 
+    cd $repo
     # git checkout -b update-pipeline
     dotnet run --project C:\Code\FireStarter\firestarter\
     git add -A
