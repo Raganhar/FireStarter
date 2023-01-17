@@ -25,6 +25,13 @@ jobs:
           dotnet-version: '{(solution.Projects.GroupBy(c => c.Tech).Count() == 1 && solution.Projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
       - run: dotnet restore
       - run: dotnet build --no-restore
-      - run: dotnet test --no-build --no-restore --filter Category=SanityTest
+      - run: dotnet test --no-build --no-restore --filter Category=SanityTest --verbosity normal -l:""trx;LogFileName=testresult.xml""
+      - name: Test Report
+        uses: dorny/test-reporter@v1 #you need to include nuget package: coverlet.collector in your test project
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Test results            # Name of the check run which will be created
+          path:  '*/TestResults/*.xml'     # Path to test results
+          reporter: dotnet-trx        # Format of test result
 ";
 }
