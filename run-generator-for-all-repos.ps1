@@ -1,17 +1,19 @@
-$PAT=$args[0]
-$gitRepos = @("AuctionService")
+$PAT = $args[0]
+$gitRepos = @("AuctionService","ProductService","product-api")
 foreach ($repo in $gitRepos) {
 
-    git clone ("https://"+$PAT+"@github.com/AUTOProff/" +$repo+".git") --depth 1
+    git clone ("https://" + $PAT + "@github.com/AUTOProff/" + $repo + ".git") --depth 1
     cd $repo
-    # git checkout -b update-pipeline
-try{
-    dotnet run --project C:\Code\FireStarter\firestarter\
-    git add -A
-    git commit -a -m 'ran firestarter'
-    # git push -u origin update-pipeline
-    git push origin 
-} catch{}
+    try {
+        dotnet run --project C:\Code\FireStarter\firestarter\
+        Write-Output "lol"    
+        git add -A
+        git commit -a -m 'ran firestarter'
+        git push origin 
+    }
+    catch {
+        Write-Output "test output"
+    }
 
     cd..
     # rm -R $repo
