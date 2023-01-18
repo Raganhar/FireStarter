@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using firestarter.GithubActionModels.Pullrequest;
 using firestarter.GithubWorkflows;
+using firestarter.GithubWorkflows.TerraformFlows;
+using firestarter.GithubWorkflows.TerraformFlows.SupportFlows;
 using firestarter.LegacyFlows;
 using MoreLinq;
 using Newtonsoft.Json;
@@ -45,7 +47,9 @@ public class Logic
             .SelectMany(x => new List<string> { $"{x}", $"{x}.tests" });
         var githubWorkflows = ".github/workflows";
         // new[] { githubWorkflows, ".infra" }.Concat(projectFolders).ForEach(x => { Directory.CreateDirectory(x); });
-        new[] { githubWorkflows}.ForEach(x => { Directory.CreateDirectory(x); });
+        var strings = new[] { githubWorkflows };
+
+        strings.ForEach(x => { Directory.CreateDirectory(x); });
         return githubWorkflows;
     }
 
@@ -86,8 +90,7 @@ public class Logic
 
         var b = new[] { "", "" };
 
-        var list = b.GroupBy(x=>x).ToDictionary(x=>x.Key,c=>c);
-        
+        var list = b.GroupBy(x => x).ToDictionary(x => x.Key, c => c);
     }
 
     private static SolutionDescription? GetSolutionDescription()
@@ -109,10 +112,9 @@ public class Logic
 
         switch (solutionDescription.LegacySystem)
         {
-            case SupportedLegacySystems.apfe:Apfe(projectNames);
+            case SupportedLegacySystems.apfe:
+                Apfe(projectNames);
                 break;
-            // case SupportedLegacySystems.auction_service:AuctionService(solutionDescription);
-            //     break;
             case null:
                 if (solutionDescription.GitWorkflow == GitWorkflow.TrunkBased)
                 {
@@ -122,6 +124,7 @@ public class Logic
                 {
                     StandardGithubFlows(solutionDescription);
                 }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -157,43 +160,6 @@ public class Logic
         filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
-    
-    // private static void AuctionService(SolutionDescription solution)
-    // {
-    //     var projects = solution.Projects;
-    //     var filename = $"{nameof(verify)}.yml".ToFileName();
-    //     File.WriteAllText(filename, verify.content(projects));
-    //     
-    //     filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
-    //     File.WriteAllText(filename, run_sanity_tests.content(projects));
-    //     
-    //     filename = $"{nameof(promote_dev)}.yml".ToFileName();
-    //     File.WriteAllText(filename, promote_dev.content);
-    //
-    //     filename = $"{nameof(promote_release)}.yml".ToFileName();
-    //     File.WriteAllText(filename, promote_release.content);
-    //
-    //     filename = $"{nameof(pull_request_for_hotfix)}.yml".ToFileName();
-    //     File.WriteAllText(filename, pull_request_for_hotfix.content);
-    //
-    //     filename = $"{nameof(release_dev)}.yml".ToFileName();
-    //     File.WriteAllText(filename, release_dev.content(solution));
-    //
-    //     filename = $"{nameof(release_preprod)}.yml".ToFileName();
-    //     File.WriteAllText(filename, release_preprod.content(projects));
-    //
-    //     filename = $"{nameof(release_prod)}.yml".ToFileName();
-    //     File.WriteAllText(filename, release_prod.content(solution));
-    //
-    //     filename = $"{nameof(release_qa)}.yml".ToFileName();
-    //     File.WriteAllText(filename, release_qa.content(solution));
-    //
-    //     filename = $"{nameof(release_reuse)}.yml".ToFileName();
-    //     File.WriteAllText(filename,   firestarter.LegacyFlows.AuctionService.release_reuse.content);
-    //
-    //     filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
-    //     File.WriteAllText(filename, transition_jira_issues.content);
-    // }
 
     private static void StandardGithubFlows(SolutionDescription solution)
     {
@@ -206,7 +172,7 @@ public class Logic
         
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
         File.WriteAllText(filename, run_sanity_tests.content(solution));
-        
+
         filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
@@ -234,23 +200,49 @@ public class Logic
         filename = $"{nameof(transition_jira_issues)}.yml".ToFileName();
         File.WriteAllText(filename, transition_jira_issues.content);
     }
+
     private static void TrunkBasedGithubFlows(SolutionDescription solution)
     {
         var projects = solution.Projects;
-        var filename = $"{nameof(verify)}.yml".ToFileName();
-        File.WriteAllText(filename, verify.content(projects));
+
+        var signInToEnvironmentAccount = "sign-in-to-environment-account";
+        Directory.CreateDirectory(signInToEnvironmentAccount);
+        var a = $"action.yml".ToFileName();
+        File.WriteAllText( Path.Combine(signInToEnvironmentAccount,a), sign_in_to_environment_account.content);
+
+        var signInToOrgAccount = "sign-in-to-org-account";
+        Directory.CreateDirectory(signInToOrgAccount);
+        File.WriteAllText(Path.Combine(signInToOrgAccount,a), sign_in_to_org_account.content);
+
+        var terraformPlanAndComment = "terraform-plan-and-comment";
+        Directory.CreateDirectory(terraformPlanAndComment);
+        File.WriteAllText(Path.Combine(terraformPlanAndComment,a), terraform_plan_and_comment.content);
+
+        // var supportFlows = "support-flows";
+        // Directory.CreateDirectory(supportFlows);
+        File.WriteAllText($"{nameof(deploy_common)}.yml".ToFileName(), deploy_common.content);
+        File.WriteAllText($"{nameof(validate_common)}.yml".ToFileName(), validate_common.content);
+
+        var filename = $"{nameof(AutoDeployInfra)}.yml".ToFileName();
+        File.WriteAllText(filename, AutoDeployInfra.content(solution));
         
         filename = $"{nameof(clean_images)}.yml".ToFileName();
         File.WriteAllText(filename, clean_images.content(solution));
         
+        filename = $"{nameof(validate_infra)}.yml".ToFileName();
+        File.WriteAllText(filename, validate_infra.content(solution));
+        
+        filename = $"{nameof(verify)}.yml".ToFileName();
+        File.WriteAllText(filename, verify.content(projects));
+
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
         File.WriteAllText(filename, run_sanity_tests.content(solution));
-        
+
         filename = $"{nameof(release_dev)}.yml".ToFileName();
         File.WriteAllText(filename, release_dev.content(solution));
 
-        filename = $"{nameof(release_preprod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_preprod.content(projects));
+        // filename = $"{nameof(release_preprod)}.yml".ToFileName();
+        // File.WriteAllText(filename, release_preprod.content(projects));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
         File.WriteAllText(filename, release_prod.content(solution));
