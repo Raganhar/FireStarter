@@ -18,8 +18,16 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
+      - name: validate naming of branch
+        uses: Raganhar/nup-jira-ticket-type@v1
+        env:
+          GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
+        with:
+          jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
+          jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
+          jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
       - name: ""Checkout""
         uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v2
@@ -27,7 +35,14 @@ jobs:
           dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
       - run: dotnet restore
       - run: dotnet build --no-restore
-      - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")}
+      - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
+      - name: Test Report
+        uses: dorny/test-reporter@v1 #you need to include nuget package: coverlet.collector in your test project
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Test results            # Name of the check run which will be created
+          path:  '*/TestResults/*.xml'     # Path to test results
+          reporter: dotnet-trx        # Format of test result
 
   {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"{NamingBuildStep(x.Name)}:
     needs: verify
@@ -96,48 +111,48 @@ jobs:
         push: true
         tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName.ToLowerInvariant()}:${{{{env.artifact_version}}}}"))}
 
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",projects.Select(x=>$@"push_tag_{x.Name}:
-      needs: [{string.Join(",",projects.Select(c=>NamingBuildStep(c.Name)))}]
-      runs-on: ubuntu-latest
-      steps:
-     
-      - name: ""Get branch name and save to env""
-        env:
-          IS_PR: ${{{{ github.event_name == 'pull_request'}}}}
-        run: |
-          
-          if ${{IS_PR}}; then
-            BRANCH=""${{GITHUB_HEAD_REF}}""
-            BASE_TAG=""${{BRANCH##*/}}""
-          else
-            BRANCH=""${{GITHUB_REF_NAME}}""
-            BASE_TAG=""${{BRANCH##*/}}""
-          fi
+  push_tag:
+    needs: [{string.Join(",",projects.Select(c=>NamingBuildStep(c.Name)))}]
+    runs-on: ubuntu-latest
+    steps:
+   
+    - name: ""Get branch name and save to env""
+      env:
+        IS_PR: ${{{{ github.event_name == 'pull_request'}}}}
+      run: |
+        
+        if ${{IS_PR}}; then
+          BRANCH=""${{GITHUB_HEAD_REF}}""
+          BASE_TAG=""${{BRANCH##*/}}""
+        else
+          BRANCH=""${{GITHUB_REF_NAME}}""
+          BASE_TAG=""${{BRANCH##*/}}""
+        fi
 
-          echo ""BRANCH=${{BRANCH}}"" >> $GITHUB_ENV 
-          echo ""BASE_TAG=${{BASE_TAG}}"" >> $GITHUB_ENV 
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-            token: ${{{{ secrets.MY_PAT }}}}
-            fetch-depth: 0
+        echo ""BRANCH=${{BRANCH}}"" >> $GITHUB_ENV 
+        echo ""BASE_TAG=${{BASE_TAG}}"" >> $GITHUB_ENV 
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+          token: ${{{{ secrets.MY_PAT }}}}
+          fetch-depth: 0
 
-      - name: Set Tag Name
-        id: artifact_version
-        run: echo ""artifact_version=${{{{env.BASE_TAG}}}}.$(date +'%Y-%m-%d').b${{{{github.run_number}}}}"" >> $GITHUB_ENV 
+    - name: Set Tag Name
+      id: artifact_version
+      run: echo ""artifact_version=${{{{env.BASE_TAG}}}}.$(date +'%Y-%m-%d').b${{{{github.run_number}}}}"" >> $GITHUB_ENV 
 
-      - name: artifact version
-        run: echo newly set env variable ${{{{env.BASE_TAG}}}}
+    - name: artifact version
+      run: echo newly set env variable ${{{{env.BASE_TAG}}}}
 
-      - name: container tag
-        run: echo newly set env variable ${{{{env.artifact_version}}}}
+    - name: container tag
+      run: echo newly set env variable ${{{{env.artifact_version}}}}
 
-      - name: Authenticate with the Github Container Registry 🔐
-        run: echo ${{{{ secrets.GITHUB_TOKEN }}}} | docker login ghcr.io -u USERNAME --password-stdin
+    - name: Authenticate with the Github Container Registry 🔐
+      run: echo ${{{{ secrets.GITHUB_TOKEN }}}} | docker login ghcr.io -u USERNAME --password-stdin
 
-      - name: Create tag
-        run: |
-          git tag ${{{{ env.artifact_version }}}}
-          git push --tags"))}
+    - name: Create tag
+      run: |
+        git tag ${{{{ env.artifact_version }}}}
+        git push --tags
 ";
 }
