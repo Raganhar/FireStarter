@@ -2,7 +2,7 @@
 
 public static class validate_infra
 {
-    public static string content = @"
+    public static string content (SolutionDescription solution) => $@"
 name: Validate infra
 
 on:
@@ -18,7 +18,7 @@ jobs:
     with:
       environment: dev
       profile: dev02
-      workspace: dev-tbd-integration-api
+      workspace: dev-{solution.Projects.First().ServiceName}
 
   validate-environment-stage:
     secrets: inherit
@@ -26,7 +26,7 @@ jobs:
     with:
       environment: stage
       profile: stage02
-      workspace: stage-tbd-integration-api
+      workspace: stage-{solution.Projects.First().ServiceName}
 
   validate-environment-prod:
     secrets: inherit
@@ -34,7 +34,7 @@ jobs:
     with:
       environment: prod
       profile: prod02
-      workspace: prod-tbd-integration-api
+      workspace: prod-{solution.Projects.First().ServiceName}
 ";
 
 }

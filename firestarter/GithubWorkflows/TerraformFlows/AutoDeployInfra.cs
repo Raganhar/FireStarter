@@ -2,7 +2,7 @@
 
 public static class AutoDeployInfra
 {
-    public static string content = @"
+    public static string content(SolutionDescription solution) => $@"
 name: Deploy Infrastructure
 
 on:
@@ -13,12 +13,15 @@ on:
 
 jobs:
   wait-for-verify:
-    uses: lewagon/wait-on-check-action@v1.2.0
-    with:
-      ref: main
-      check-name: verify
-      repo-token: ${{ secrets.GITHUB_TOKEN }}
-      wait-interval: 20
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for tests to succeed
+        uses: lewagon/wait-on-check-action@v1.2.0
+        with:
+          ref: main
+          check-name: push_tag
+          repo-token: ${{{{ secrets.GITHUB_TOKEN }}}}
+          wait-interval: 20
 
   deploy-environment-stage:
     needs: [wait-for-verify]
@@ -27,7 +30,7 @@ jobs:
     with:
       environment: stage
       profile: stage02
-      workspace: stage-tbd-integration-api
+      workspace: stage-{solution.Projects.First().ServiceName}
 
   deploy-environment-dev:
     needs: [wait-for-verify]
@@ -36,16 +39,7 @@ jobs:
     with:
       environment: dev
       profile: dev02
-      workspace: dev-tbd-integration-api
-
-  deploy-environment-preprod:
-    needs: [wait-for-verify]
-    secrets: inherit
-    uses: ./.github/workflows/deploy-common.yml
-    with:
-      environment: dev03
-      profile: dev03
-      workspace: dev03-tbd-integration-api
+      workspace: dev-{solution.Projects.First().ServiceName}
 
   deploy-environment-prod:
     needs: [wait-for-verify]
@@ -54,6 +48,6 @@ jobs:
     with:
       environment: prod
       profile: prod02
-      workspace: prod-tbd-integration-api
+      workspace: prod-{solution.Projects.First().ServiceName}
 ";
 }

@@ -224,13 +224,13 @@ public class Logic
         File.WriteAllText($"{nameof(validate_common)}.yml".ToFileName(), validate_common.content);
 
         var filename = $"{nameof(AutoDeployInfra)}.yml".ToFileName();
-        File.WriteAllText(filename, AutoDeployInfra.content);
+        File.WriteAllText(filename, AutoDeployInfra.content(solution));
         
         filename = $"{nameof(clean_images)}.yml".ToFileName();
         File.WriteAllText(filename, clean_images.content(solution));
         
         filename = $"{nameof(validate_infra)}.yml".ToFileName();
-        File.WriteAllText(filename, validate_infra.content);
+        File.WriteAllText(filename, validate_infra.content(solution));
         
         filename = $"{nameof(verify)}.yml".ToFileName();
         File.WriteAllText(filename, verify.content(projects));
@@ -241,8 +241,8 @@ public class Logic
         filename = $"{nameof(release_dev)}.yml".ToFileName();
         File.WriteAllText(filename, release_dev.content(solution));
 
-        filename = $"{nameof(release_preprod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_preprod.content(projects));
+        // filename = $"{nameof(release_preprod)}.yml".ToFileName();
+        // File.WriteAllText(filename, release_preprod.content(projects));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
         File.WriteAllText(filename, release_prod.content(solution));
