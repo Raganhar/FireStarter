@@ -45,7 +45,6 @@ jobs:
           reporter: dotnet-trx        # Format of test result
 
   {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"{NamingBuildStep(x.Name)}:
-    needs: verify
     runs-on: ubuntu-latest
     steps:
     - name: Dump GitHub context
@@ -103,16 +102,18 @@ jobs:
 
     - name: Build and push docker image 🏗 📦
       id: build-n-push
-      uses: docker/build-push-action@v2
+      uses: docker/build-push-action@v3
       with:
         context: .
         file: {x.DockerFile}
         platforms: linux/amd64
         push: true
         tags: ghcr.io/${{{{steps.lower_owner.outputs.lowercase}}}}/{x.ServiceName.ToLowerInvariant()}:${{{{env.artifact_version}}}}"))}
+        build-args: |
+          ""BUILD_VERSION=${{{{ env.artifact_version }}}}""
 
   push_tag:
-    needs: [{string.Join(",",projects.Select(c=>NamingBuildStep(c.Name)))}]
+    needs: [{string.Join(",",projects.Select(c=>NamingBuildStep(c.Name)))},verify]
     runs-on: ubuntu-latest
     steps:
    

@@ -8,7 +8,7 @@ name: Clean images
 on: 
   workflow_dispatch:
   schedule:
-    - cron: ""0 0 1 * *""  # every day at midnight
+    - cron: ""0 0 * * *""  # every day at midnight
 
 jobs:
   clean-ghcr:
