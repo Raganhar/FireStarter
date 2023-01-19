@@ -18,7 +18,7 @@ jobs:
     with:
       environment: dev
       profile: dev02
-      workspace: dev-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.dev)}
 
   validate-environment-stage:
     secrets: inherit
@@ -26,7 +26,7 @@ jobs:
     with:
       environment: stage
       profile: stage02
-      workspace: stage-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.stage)}
 
   validate-environment-prod:
     secrets: inherit
@@ -34,7 +34,6 @@ jobs:
     with:
       environment: prod
       profile: prod02
-      workspace: prod-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.prod)}
 ";
-
 }

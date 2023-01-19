@@ -28,6 +28,7 @@ public class Project
     public string Name { get; set; }
     public string DockerFile => LegacyProperties?.DockerFile ?? $"{Name}/Dockerfile";
     public string ServiceName => LegacyProperties?.ServiceName ?? $"{Name}-service";
+    public string TerraformWorkSpace (DeploymentEnvironments env) => $"{env.ToString()}-{ServiceName}";
     public string TestFilter => LegacyProperties?.TestFilter ?? $"";
     public DeprecatedProperties LegacyProperties { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
