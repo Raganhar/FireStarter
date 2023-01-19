@@ -28,26 +28,26 @@ jobs:
     secrets: inherit
     uses: ./.github/workflows/deploy-common.yml
     with:
-      environment: stage
+      environment: {DeploymentEnvironments.stage}
       profile: stage02
-      workspace: stage-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.stage)}
 
   deploy-environment-dev:
     needs: [wait-for-verify]
     secrets: inherit
     uses: ./.github/workflows/deploy-common.yml
     with:
-      environment: dev
+      environment: {DeploymentEnvironments.dev}
       profile: dev02
-      workspace: dev-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.dev)}
 
   deploy-environment-prod:
     needs: [wait-for-verify]
     secrets: inherit
     uses: ./.github/workflows/deploy-common.yml
     with:
-      environment: prod
+      environment: {DeploymentEnvironments.prod}
       profile: prod02
-      workspace: prod-{solution.Projects.First().ServiceName}
+      workspace: {solution.Projects.First().TerraformWorkSpace(DeploymentEnvironments.prod)}
 ";
 }
