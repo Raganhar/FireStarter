@@ -33,6 +33,7 @@ public class Project
     public DeprecatedProperties LegacyProperties { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TechStack Tech { get; set; }
+    public MigrationUtils? MigrationUtils { get; set; }
 }
 
 public class DeprecatedProperties
@@ -41,6 +42,14 @@ public class DeprecatedProperties
     public string DockerFile { get; set; } = "Dockerfile";
     public string ServiceName { get; set; }
     public string TestFilter { get; set; }
+}
+public class MigrationUtils
+{
+    public string Db_context_type { get; set; }
+    public string Db_database { get; set; }
+    public string Db_assembly { get; set; }
+    public string Subnets { get; set; }
+    public string Security_groups { get; set; }
 }
 
 public enum TechStack
