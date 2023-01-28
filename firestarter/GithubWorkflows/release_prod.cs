@@ -1,4 +1,6 @@
-﻿namespace firestarter.GithubWorkflows;
+﻿using firestarter.Templates;
+
+namespace firestarter.GithubWorkflows;
 
 public static class release_prod
 {
@@ -11,16 +13,7 @@ on:
       - main.**")}
 
 jobs:
-  {string.Join(Environment.NewLine+Environment.NewLine+"  ",solution.Projects.Select(x=>($@"release-{x.ServiceName}:
-    secrets: inherit
-    uses: ./.github/workflows/release-reuse.yml
-    with:
-      environment: {(solution.GitWorkflow == GitWorkflow.Gitflow?"prod02":"prod")}
-      prefix: prod
-      cluster: autoproff-cluster
-      service_name: {x.ServiceName}
-      branch_name: main
-      {(!string.IsNullOrWhiteSpace(x.LegacyProperties?.ContainerName) ? $"container_name: prod-{x.LegacyProperties?.ContainerName}" : "")}")))}
+  {TemplateClass.ReleaseEcs(solution, DeploymentEnvironments.prod)}
 
   {string.Join(Environment.NewLine + Environment.NewLine + "  ",solution.Projects.Where(x=>x.MigrationUtils!=null).Select(x => $@"run-database-migrations-{x.ServiceName}:
     secrets: inherit
@@ -30,8 +23,8 @@ jobs:
       environment: {(solution.GitWorkflow == GitWorkflow.Gitflow?"prod02":"prod")}
       prefix: prod
       service_name: ""{x.ServiceName}""
-      security_groups: ""{x.MigrationUtils.Security_groups}""
-      subnets: ""{x.MigrationUtils.Subnets}""
+      security_groups: ""{x.MigrationUtils.SecurityConfig_prod.Security_groups}""
+      subnets: ""{x.MigrationUtils.SecurityConfig_prod.Subnets}""
       db_assembly: ""{x.MigrationUtils.Db_assembly}""
       db_database: ""{x.MigrationUtils.Db_database}""
       db_commandtype: ""databasemigrationup""
@@ -53,5 +46,7 @@ jobs:
           release-jira-transition: in progress
           branch_to_compare_to: main
           jira_state_when_revert: blocked
+
+  {TemplateClass.WaitUntilStable(solution, DeploymentEnvironments.prod)}
 ";
 }

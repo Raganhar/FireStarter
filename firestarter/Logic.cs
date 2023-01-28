@@ -173,6 +173,9 @@ public class Logic
         filename = $"{nameof(run_sanity_tests)}.yml".ToFileName();
         File.WriteAllText(filename, run_sanity_tests.content(solution));
 
+        filename = $"{nameof(wait_until_stable)}.yml".ToFileName();
+        File.WriteAllText(filename, wait_until_stable.content);
+        
         filename = $"{nameof(promote_dev)}.yml".ToFileName();
         File.WriteAllText(filename, promote_dev.content);
 
@@ -225,6 +228,9 @@ public class Logic
 
         var filename = $"{nameof(AutoDeployInfra)}.yml".ToFileName();
         File.WriteAllText(filename, AutoDeployInfra.content(solution));
+        
+        filename = $"{nameof(wait_until_stable)}.yml".ToFileName();
+        File.WriteAllText(filename, wait_until_stable.content);
         
         filename = $"{nameof(clean_images)}.yml".ToFileName();
         File.WriteAllText(filename, clean_images.content(solution));

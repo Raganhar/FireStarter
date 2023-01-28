@@ -134,12 +134,5 @@ jobs:
           ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
         run: |
           aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
-          
-      - name: Wait until stable
-        env:
-          ECS_SERVICE: ${{ inputs.prefix }}-${{ inputs.service_name }}
-          ECS_CLUSTER: ${{ inputs.prefix }}-${{ inputs.cluster }}
-        run: |
-          aws ecs wait services-stable --cluster $ECS_CLUSTER --service $ECS_SERVICE
 ";
 }

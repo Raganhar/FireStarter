@@ -43,13 +43,23 @@ public class DeprecatedProperties
     public string ServiceName { get; set; }
     public string TestFilter { get; set; }
 }
+
+public class SecurityConfig
+{
+    public string Subnets { get; set; }
+    public string Security_groups { get; set; }
+}
+
 public class MigrationUtils
 {
+    private readonly SecurityConfig _securityConfig = new SecurityConfig();
     public string Db_context_type { get; set; }
     public string Db_database { get; set; }
     public string Db_assembly { get; set; }
-    public string Subnets { get; set; }
-    public string Security_groups { get; set; }
+
+    public SecurityConfig SecurityConfig_dev { get; set; }
+    public SecurityConfig SecurityConfig_qa { get; set; }
+    public SecurityConfig SecurityConfig_prod { get; set; }
 }
 
 public enum TechStack
