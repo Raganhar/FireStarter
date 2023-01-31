@@ -189,7 +189,7 @@ public class Logic
         File.WriteAllText(filename, release_dev.content(solution));
 
         filename = $"{nameof(release_preprod)}.yml".ToFileName();
-        File.WriteAllText(filename, release_preprod.content(projects));
+        File.WriteAllText(filename, release_preprod.content(solution));
 
         filename = $"{nameof(release_prod)}.yml".ToFileName();
         File.WriteAllText(filename, release_prod.content(solution));

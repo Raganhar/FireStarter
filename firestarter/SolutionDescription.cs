@@ -52,14 +52,9 @@ public class SecurityConfig
 
 public class MigrationUtils
 {
-    private readonly SecurityConfig _securityConfig = new SecurityConfig();
     public string Db_context_type { get; set; }
     public string Db_database { get; set; }
     public string Db_assembly { get; set; }
-
-    public SecurityConfig SecurityConfig_dev { get; set; }
-    public SecurityConfig SecurityConfig_qa { get; set; }
-    public SecurityConfig SecurityConfig_prod { get; set; }
 }
 
 public enum TechStack

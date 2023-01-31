@@ -4,7 +4,8 @@ public enum DeploymentEnvironments
 {
     dev,
     stage,
-    prod
+    prod,
+    dev03
 }
 
 public static class EnumExtension
@@ -20,6 +21,9 @@ public static class EnumExtension
                 return "release";
                 break;
             case DeploymentEnvironments.prod:
+                return "main";
+                break;
+            case DeploymentEnvironments.dev03:
                 return "main";
                 break;
             default:
