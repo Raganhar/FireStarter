@@ -7,7 +7,7 @@ public static class promote_dev
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * 1,2,3,4,5' # UTC time
+    - cron: '30 10 * * 1,3' # UTC time
 
 jobs:
   create-branch:
