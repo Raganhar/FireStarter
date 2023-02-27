@@ -1,5 +1,5 @@
 $PAT = $args[0]
-$gitRepos = @("AuctionService","ProductService","product-api")
+$gitRepos = @("AuctionService","ProductService")
 foreach ($repo in $gitRepos) {
 
     git clone ("https://" + $PAT + "@github.com/AUTOProff/" + $repo + ".git") --depth 1
