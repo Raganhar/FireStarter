@@ -100,6 +100,9 @@ jobs:
     - name: Authenticate with the Github Container Registry 🔐
       run: echo ${{{{ secrets.GITHUB_TOKEN }}}} | docker login ghcr.io -u USERNAME --password-stdin
 
+    - run: sed -i 's/BUILD_VERSION_REPLACE/${{ env.artifact_version }}/g' {x.DockerFile}
+      shell: bash
+
     - name: Build and push docker image 🏗 📦
       id: build-n-push
       uses: docker/build-push-action@v3

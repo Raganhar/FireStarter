@@ -30,3 +30,7 @@ example solutionDescription
   "Version": "v1"
 }
 
+
+
+##how to run:
+ go to root folder and execute "dotnet run --project C:\Code\FireStarter\firestarter\" in powershell
