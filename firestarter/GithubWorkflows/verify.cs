@@ -45,6 +45,9 @@ jobs:
             --store-password-in-clear-text
       
       - run: dotnet restore
+      - name: restore dotnet tools
+        run: dotnet tool restore
+
       - run: dotnet build --no-restore
       - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
       - name: Test Report
@@ -123,6 +126,9 @@ jobs:
           -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
           --configfile nuget.config \
           --store-password-in-clear-text
+
+    - run: sed -i 's/BUILD_VERSION_REPLACE/${{ env.artifact_version }}/g' {x.DockerFile}
+      shell: bash
 
     - name: Build and push docker image 🏗 📦
       id: build-n-push

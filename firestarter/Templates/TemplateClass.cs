@@ -5,7 +5,12 @@ public static class TemplateClass
     public static string NamingReleaseStep(Project s) => $"release-{s.ServiceName}";
     public static string WaitUntilStable(SolutionDescription solution, DeploymentEnvironments env)
     {
-        return ""; // this is apparently too expensive... since its billed as normal executing time
+        // return ""; // this is apparently too expensive... since its billed as normal executing time
+        var shouldBeWaited = new List<DeploymentEnvironments>() { DeploymentEnvironments.prod ,DeploymentEnvironments.stage}.Contains(env);
+        if (!shouldBeWaited)
+        {
+            return "";
+        }
         return string.Join(Environment.NewLine + Environment.NewLine + "  ",solution.Projects.Select(x => $@"wait-until-stable-{x.ServiceName}:
     secrets: inherit
     needs: [{NamingReleaseStep(x)}]
