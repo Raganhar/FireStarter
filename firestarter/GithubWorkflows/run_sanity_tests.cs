@@ -20,9 +20,21 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: {(solution.GitWorkflow == GitWorkflow.Gitflow?"release":"main")} 
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '{(solution.Projects.GroupBy(c => c.Tech).Count() == 1 && solution.Projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
+
+    - name: Create nuget file
+      run: dotnet new nugetconfig
+    - name: Set nuget auth to github
+      run: | 
+        dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
+          -n github \
+          -u ${{{{ secrets.PACKAGE_REGISTRY_USER }}}} \
+          -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
+          --configfile nuget.config \
+          --store-password-in-clear-text
+  
       - run: dotnet restore
       - run: dotnet build --no-restore
       - run: dotnet test --no-build --no-restore --filter Category=SanityTest --verbosity normal -l:""trx;LogFileName=testresult.xml""
