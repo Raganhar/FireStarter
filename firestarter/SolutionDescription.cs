@@ -34,6 +34,12 @@ public class Project
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public TechStack Tech { get; set; }
     public MigrationUtils? MigrationUtils { get; set; }
+    public DotnetProperties Dotnet { get; set; }
+}
+
+public class DotnetProperties
+{
+    public List<string> ProjectesWithDotnetTools { get; set; }
 }
 
 public class DeprecatedProperties

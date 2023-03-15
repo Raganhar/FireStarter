@@ -34,8 +34,8 @@ jobs:
         with:
           dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
       - run: dotnet restore
-      - name: restore dotnet tools
-        run: dotnet tool restore
+
+  {ToolRestore(projects)}
 
       - run: dotnet build --no-restore
       - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
@@ -162,4 +162,11 @@ jobs:
         git tag ${{{{ env.artifact_version }}}}
         git push --tags
 ";
+
+  private static string ToolRestore(List<Project> projects)
+  {
+    return string.Join(Environment.NewLine,projects.SelectMany(x=>x.Dotnet?.ProjectesWithDotnetTools??new List<string>()).Select(c=>@$"    - name: restore dotnet tools {c}
+        run: dotnet tool restore
+        working-directory: {c}"));
+  }
 }
