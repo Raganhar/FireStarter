@@ -20,44 +20,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - name: validate naming of branch
-        uses: Raganhar/nup-jira-ticket-type@v1
-        env:
-          GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
-        with:
-          jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
-          jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
-          jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
-      - name: ""Checkout""
-        uses: actions/checkout@v3
-      - uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
-      
-      - name: Create nuget file
-        run: dotnet new nugetconfig
-      - name: Set nuget auth to github
-        run: | 
-          dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
-            -n github \
-            -u ${{{{ secrets.PACKAGE_REGISTRY_USER }}}} \
-            -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
-            --configfile nuget.config \
-            --store-password-in-clear-text
-        
-      - run: dotnet restore
-
-  {ToolRestore(projects)}
-
-      - run: dotnet build --no-restore
-      - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
-      - name: Test Report
-        uses: dorny/test-reporter@v1 #you need to include nuget package: coverlet.collector in your test project
-        if: success() || failure()    # run this step even if previous step failed
-        with:
-          name: Test results            # Name of the check run which will be created
-          path:  '*/TestResults/*.xml'     # Path to test results
-          reporter: dotnet-trx        # Format of test result
+    - name: validate naming of branch
+      uses: Raganhar/nup-jira-ticket-type@v1
+      env:
+        GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
+      with:
+        jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
+        jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
+        jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
+    - name: ""Checkout""
+      uses: actions/checkout@v3
+    - uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
+    {Templates.TemplateClass.CreateNugetConfig()}      
+    {ToolRestore(projects)}
+    - run: dotnet build --no-restore
+    - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
+    - name: Test Report
+      uses: dorny/test-reporter@v1 #you need to include nuget package: coverlet.collector in your test project
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: Test results            # Name of the check run which will be created
+        path:  '*/TestResults/*.xml'     # Path to test results
+        reporter: dotnet-trx        # Format of test result
 
   {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"{NamingBuildStep(x.Name)}:
     runs-on: ubuntu-latest
@@ -118,16 +104,7 @@ jobs:
       with:
         dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
     
-    - name: Create nuget file
-      run: dotnet new nugetconfig
-    - name: Set nuget auth to github
-      run: | 
-        dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
-          -n github \
-          -u ${{{{ secrets.PACKAGE_REGISTRY_USER }}}} \
-          -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
-          --configfile nuget.config \
-          --store-password-in-clear-text
+    {Templates.TemplateClass.CreateNugetConfig()}
 
     - run: sed -i 's/BUILD_VERSION_REPLACE/${{ env.artifact_version }}/g' {x.DockerFile}
       shell: bash
@@ -190,8 +167,9 @@ jobs:
 
   private static string ToolRestore(List<Project> projects)
   {
-    return string.Join(Environment.NewLine,projects.SelectMany(x=>x.Dotnet?.ProjectesWithDotnetTools??new List<string>()).Select(c=>@$"    - name: restore dotnet tools {c}
-        run: dotnet tool restore
-        working-directory: {c}"));
+    return string.Join(Environment.NewLine,projects.SelectMany(x=>x.Dotnet?.ProjectesWithDotnetTools??new List<string>()).Select(c=>@$"
+    - name: restore dotnet tools {c}
+      run: dotnet tool restore
+      working-directory: {c}"));
   }
 }
