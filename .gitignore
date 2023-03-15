@@ -354,3 +354,5 @@ src/coreclr/src/System.Private.CoreLib/common
 
 tests/Credentials.txt
 /firestarter/Credentials.txt
+
+nuget.config
