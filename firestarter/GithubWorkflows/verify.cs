@@ -35,15 +35,16 @@ jobs:
           dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
       
       - name: Create nuget file
-        run: dotnet new nugetconfigfile
+        run: dotnet new nugetconfig
       - name: Set nuget auth to github
-        run: dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
+        run: | 
+          dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
             -n github \
             -u ${{{{ secrets.PACKAGE_REGISTRY_USER }}}} \
             -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
             --configfile nuget.config \
             --store-password-in-clear-text
-      
+        
       - run: dotnet restore
       - name: restore dotnet tools
         run: dotnet tool restore
@@ -118,9 +119,10 @@ jobs:
         dotnet-version: '{(projects.GroupBy(c => c.Tech).Count() == 1 && projects.GroupBy(c => c.Tech).First().Key == TechStack.legacy_dotnet ? "3" : "6")}.x'
     
     - name: Create nuget file
-      run: dotnet new nugetconfigfile
+      run: dotnet new nugetconfig
     - name: Set nuget auth to github
-      run: dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
+      run: | 
+        dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \ 
           -n github \
           -u ${{{{ secrets.PACKAGE_REGISTRY_USER }}}} \
           -p ${{{{ secrets.PACKAGE_REGISTRY_READ_TOKEN }}}} \
