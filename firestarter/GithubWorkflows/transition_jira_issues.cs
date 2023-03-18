@@ -32,7 +32,7 @@ jobs:
           jira-user: ${{ secrets.JIRA_USER_EMAIL }}
           branch_to_compare_to: main
           main-jira-transition: pending release
-          release-jira-transition: QA
+          release-jira-transition: pending release
           jira_state_when_revert: blocked
           ignore_tickets_in_following_states: pending release
     
@@ -52,7 +52,7 @@ jobs:
           jira-user: ${{ secrets.JIRA_USER_EMAIL }}
           branch_to_compare_to: main
           main-jira-transition: pending release
-          release-jira-transition: QA
+          release-jira-transition: pending release
           jira_state_when_revert: blocked
 ";
 }
