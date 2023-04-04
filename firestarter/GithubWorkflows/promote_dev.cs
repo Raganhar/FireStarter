@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: dev
-          token: ${{ secrets.MY_PAT }}
+          token: ${{ secrets.GIT_PAT }}
 
       - name: Remove old release branch
         continue-on-error: true # Fails if there is no old release branch
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout release
         uses: actions/checkout@v3
         with:
-            token: ${{ secrets.MY_PAT }}
+            token: ${{ secrets.GIT_PAT }}
             ref: release
             fetch-depth: 0
 

@@ -20,6 +20,4 @@ jobs:
 
   {TemplateClass.WaitUntilStable(solution, DeploymentEnvironments.dev)}
 ";
-
-    
 }
