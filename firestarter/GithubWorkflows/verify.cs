@@ -73,6 +73,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
+          token: ${{{{  secrets.GIT_PAT }}}}
           fetch-depth: 0
 
     - name: Set Tag Name
@@ -145,6 +146,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
+          token: ${{{{  secrets.GIT_PAT }}}}
           fetch-depth: 0
 
     - name: Set Tag Name

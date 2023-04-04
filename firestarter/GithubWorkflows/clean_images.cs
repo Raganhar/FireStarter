@@ -23,6 +23,6 @@ jobs:
             account-type: org
             org-name: AUTOProff
             keep-at-least: 3
-            token: ${{{{ secrets.MY_PAT }}}}
+            token: ${{{{ secrets.GIT_PAT }}}}
 ";
 }
