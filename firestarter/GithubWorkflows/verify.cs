@@ -108,7 +108,7 @@ jobs:
     
     {Templates.TemplateClass.CreateNugetConfig()}
 
-    - run: sed -i 's/BUILD_VERSION_REPLACE/${{ env.artifact_version }}/g' {x.DockerFile}
+    - run: sed -i 's/BUILD_VERSION_REPLACE/${{{{ env.artifact_version }}}}/g' {x.DockerFile}
       shell: bash
 
     - name: Build and push docker image 🏗 📦
