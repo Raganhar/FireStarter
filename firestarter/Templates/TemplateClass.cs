@@ -53,7 +53,7 @@ public static class TemplateClass
     {
         return string.Join(Environment.NewLine + Environment.NewLine + "  ",solution.Projects.Where(x=>x.MigrationUtils!=null).Select(x => $@"run-database-migrations-{x.ServiceName}:
     secrets: inherit
-    needs: [release-product-service]
+    needs: [{TemplateClass.NamingReleaseStep(x)}]
     uses: ./.github/workflows/run-migration-task.yml
     with:
       environment: {DetermineEnvironment(solution, env)}

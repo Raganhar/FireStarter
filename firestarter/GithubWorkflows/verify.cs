@@ -18,7 +18,7 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
     - name: ""Checkout""
       uses: actions/checkout@v3
@@ -30,13 +30,6 @@ jobs:
     - run: dotnet restore
     - run: dotnet build --no-restore
     - run: dotnet test --no-build --no-restore {(!string.IsNullOrWhiteSpace(projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter) ? $"--filter {projects.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.TestFilter))?.TestFilter}" : " --filter Category!=SanityTest")} --verbosity normal -l:""trx;LogFileName=testresult.xml""
-    - name: Test Report
-      uses: dorny/test-reporter@v1 #you need to include nuget package: coverlet.collector in your test project
-      if: success() || failure()    # run this step even if previous step failed
-      with:
-        name: Test results            # Name of the check run which will be created
-        path:  '*/TestResults/*.xml'     # Path to test results
-        reporter: dotnet-trx        # Format of test result
 
   {string.Join(Environment.NewLine + Environment.NewLine + "  ", projects.Select(x => $@"{NamingBuildStep(x.Name)}:
     runs-on: ubuntu-latest
@@ -83,8 +76,8 @@ jobs:
 
     - id: ""lower_repo""
       run: |
-          repo_lower=$(echo ""${{{{  github.event.repository.name }}}}"" | awk '{{print tolower($0)}}' )
-          echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
+        repo_lower=$(echo ""${{{{  github.event.repository.name }}}}"" | awk '{{print tolower($0)}}' )
+        echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
     - id: ""lower_owner""
       run: |
         owner_lower=$(echo ""${{{{ github.repository_owner }}}}"" | awk '{{print tolower($0)}}')

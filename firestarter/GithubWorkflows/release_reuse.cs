@@ -71,11 +71,11 @@ jobs:
 
       - id: ""lower_repo""
         run: |
-            repo_lower=$(echo ""${{{{  github.event.repository.name }}}}"" | awk '{{print tolower($0)}}' )
-            echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
+          repo_lower=$(echo ""${{  github.event.repository.name }}"" | awk '{print tolower($0)}' )
+          echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
       - id: ""lower_owner""
         run: |
-          owner_lower=$(echo ""${{{{ github.repository_owner }}}}"" | awk '{{print tolower($0)}}')
+          owner_lower=$(echo ""${{ github.repository_owner }}"" | awk '{print tolower($0)}')
           echo ""lowercase=$owner_lower"" >> ""$GITHUB_OUTPUT""
 
       - name: Configure AWS credentials
