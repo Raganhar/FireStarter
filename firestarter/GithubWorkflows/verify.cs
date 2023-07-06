@@ -20,14 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-    - name: validate naming of branch
-      uses: Raganhar/nup-jira-ticket-type@v1
-      env:
-        GITHUB_CONTEXT: ""${{{{ toJson(github) }}}}""
-      with:
-        jira-api-key: ${{{{ secrets.JIRA_API_TOKEN }}}}
-        jira-url: ${{{{ secrets.JIRA_BASE_URL }}}}
-        jira-user: ${{{{ secrets.JIRA_USER_EMAIL }}}}
     - name: ""Checkout""
       uses: actions/checkout@v3
     - uses: actions/setup-dotnet@v3
@@ -90,14 +82,13 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - id: ""lower_repo""
-      uses: ASzc/change-string-case-action@v2
-      with:
-        string: ${{{{ github.event.repository.name }}}}
-
+      run: |
+          repo_lower=$(echo ""${{{{  github.event.repository.name }}}}"" | awk '{{print tolower($0)}}' )
+          echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
     - id: ""lower_owner""
-      uses: ASzc/change-string-case-action@v2
-      with:
-        string: ${{{{ github.repository_owner }}}}
+      run: |
+        owner_lower=$(echo ""${{{{ github.repository_owner }}}}"" | awk '{{print tolower($0)}}')
+        echo ""lowercase=$owner_lower"" >> ""$GITHUB_OUTPUT""
 
     - name: Authenticate with the Github Container Registry 🔐
       run: echo ${{{{ secrets.GITHUB_TOKEN }}}} | docker login ghcr.io -u USERNAME --password-stdin

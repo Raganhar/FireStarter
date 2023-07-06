@@ -70,14 +70,13 @@ jobs:
         run: echo newly set env variable ${{env.TAG}}
 
       - id: ""lower_repo""
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ${{ github.event.repository.name }}
-
+        run: |
+            repo_lower=$(echo ""${{{{  github.event.repository.name }}}}"" | awk '{{print tolower($0)}}' )
+            echo ""lowercase=$repo_lower"" >> ""$GITHUB_OUTPUT""
       - id: ""lower_owner""
-        uses: ASzc/change-string-case-action@v2
-        with:
-          string: ${{ github.repository_owner }}
+        run: |
+          owner_lower=$(echo ""${{{{ github.repository_owner }}}}"" | awk '{{print tolower($0)}}')
+          echo ""lowercase=$owner_lower"" >> ""$GITHUB_OUTPUT""
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
