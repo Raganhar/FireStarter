@@ -22,19 +22,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: transition-jira-issues
-        uses: AUTOProff/ap-github-action-jira-transition@v1
-        env:
-          GITHUB_CONTEXT: ""${{ toJson(github) }}""
-        with:
-          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
-          jira-url: ${{ secrets.JIRA_BASE_URL }}
-          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
-          branch_to_compare_to: main
-          main-jira-transition: pending release
-          release-jira-transition: pending release
-          jira_state_when_revert: blocked
-          ignore_tickets_in_following_states: pending release
+
     
   transition-jira-issues-for-main:
     if: github.ref == 'refs/heads/main'
@@ -42,17 +30,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: transition-jira-issues
-        uses: AUTOProff/ap-github-action-jira-transition@v1
-        env:
-          GITHUB_CONTEXT: ""${{ toJson(github) }}""
-        with:
-          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
-          jira-url: ${{ secrets.JIRA_BASE_URL }}
-          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
-          branch_to_compare_to: main
-          main-jira-transition: pending release
-          release-jira-transition: pending release
-          jira_state_when_revert: blocked
+
 ";
 }

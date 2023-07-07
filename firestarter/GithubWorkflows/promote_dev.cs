@@ -35,20 +35,6 @@ jobs:
           git reset --hard dev
           git push --force origin release
 
-      - name: transition jira tickets
-        uses: AUTOProff/ap-github-action-jira-transition@v1
-        env:
-          GITHUB_CONTEXT: ""${{ toJson(github) }}""
-        with:
-          jira-api-key: ${{ secrets.JIRA_API_TOKEN }}
-          jira-url: ${{ secrets.JIRA_BASE_URL }}
-          jira-user: ${{ secrets.JIRA_USER_EMAIL }}
-          branch_to_compare_to: main
-          main-jira-transition: done
-          release-jira-transition: QA
-          jira_state_when_revert: blocked
-          ignore_tickets_in_following_states: pending release
-
       - name: Checkout release
         uses: actions/checkout@v3
         with:
