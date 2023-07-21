@@ -3,16 +3,10 @@
 public static class TemplateClass
 {
     public static string CreateNugetConfig() => @"
-    - name: Create nuget file
-      run: dotnet new nugetconfig
-    - name: Set nuget auth to github
-      run: | 
-        dotnet nuget add source https://nuget.pkg.github.com/AUTOProff/index.json \
-          -n github \
-          -u ${{secrets.PACKAGE_REGISTRY_USER}} \
-          -p ${{secrets.PACKAGE_REGISTRY_READ_TOKEN}} \
-          --configfile nuget.config \
-          --store-password-in-clear-text
+    - name: Authenticate nuget package registry
+      uses: AutoScout24/apf-gh-actions-universe/apf-nuget-auth@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 ";
     public static string NamingReleaseStep(Project s) => $"release-{s.ServiceName}";
     public static string WaitUntilStable(SolutionDescription solution, DeploymentEnvironments env)
